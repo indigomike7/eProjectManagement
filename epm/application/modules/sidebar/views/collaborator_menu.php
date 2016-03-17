@@ -29,7 +29,7 @@
                 <a href="<?=base_url()?>collaborator"> <i class="fa fa-dashboard icon">
                   <b class="bg-<?=config_item('theme_color');?>"></b> </i>
               <span><?=lang('home')?></span> </a> </li>
-           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_business'){ ?>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_business' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ){ ?>
 
               <li class="<?php if($page == lang('clients')){echo  "active"; }?>">
                 <a href="<?=base_url()?>companies"> <i class="fa fa-group icon">
@@ -37,6 +37,31 @@
                 <span><?=lang('clients')?></span> </a> </li>
            <?php } ?>
                 
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ){ ?>
+
+              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Sales Order</span> </a> </li>
+           <?php } ?>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance'  ){ ?>
+
+              <li class="<?php if($page == 'procurement'){echo  "active"; }?>">
+                <a href="<?=base_url()?>procurement"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Order</span> </a> </li>
+           <?php } ?>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  ){ ?>
+
+              <li class="<?php if($page == 'supplier'){echo  "active"; }?>">
+                <a href="<?=base_url()?>supplier"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Supplier</span> </a> </li>
+              <li class="<?php if($page == 'price'){echo  "active"; }?>">
+                <a href="<?=base_url()?>price"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Price</span> </a> </li>
+           <?php } ?>
            <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_project_management' or $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance'){ ?>
 
               <li class="<?php if($page == lang('project_categories_page')){echo  "active"; }?>">

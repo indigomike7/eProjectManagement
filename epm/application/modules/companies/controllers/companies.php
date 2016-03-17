@@ -19,7 +19,7 @@ class Companies extends MX_Controller {
 		$this->load->library(array('tank_auth','form_validation'));
 		$this -> form_validation -> set_error_delimiters('<span style="color:red">', '</span><br>');
 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_business')
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_business' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader')
                 {
                     $this->session->set_flashdata('message', lang('access_denied'));
                     redirect('');

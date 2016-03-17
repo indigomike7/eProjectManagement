@@ -17,7 +17,7 @@ class View extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->library('tank_auth');
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_business' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_project_management')
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_business' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_project_management'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader')
                 {
 			$this->session->set_flashdata('message', lang('access_denied'));
 			redirect('');

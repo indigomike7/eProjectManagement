@@ -127,8 +127,8 @@ $captcha = array(
 			<div class="line line-dashed">
 			</div> 
 			<?php if (config_item('allow_client_registration') == 'TRUE'){ ?>
-			<p class="text-muted text-center"><small><?=lang('do_not_have_an_account')?></small></p> 
-			<a href="<?=base_url()?>auth/register" class="btn btn-<?=config_item('theme_color')?> btn-block"><?=lang('get_your_account')?></a>
+<!--			<p class="text-muted text-center"><small><?=lang('do_not_have_an_account')?></small></p> 
+			<a href="<?=base_url()?>auth/register" class="btn btn-<?=config_item('theme_color')?> btn-block"><?=lang('get_your_account')?></a>-->
 			<?php } ?>
 			
 <?php echo form_close(); ?>

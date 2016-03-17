@@ -17,6 +17,12 @@
 					<input type="text" class="form-control" value="<?=$user->fullname?>" name="fullname">
 				</div>
 				</div>
+			 <div class="form-group">
+				<label class="col-lg-3 control-label">Staff ID <span class="text-danger">*</span></label>
+				<div class="col-lg-8">
+					<input type="text" class="form-control" value="<?=$user->staff_id?>" name="staff_id">
+				</div>
+				</div>
 
 				<div class="form-group">
                                 <label class="col-lg-3 control-label"><?=lang('company')?></label>

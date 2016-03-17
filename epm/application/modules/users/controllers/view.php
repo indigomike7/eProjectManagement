@@ -36,6 +36,7 @@ class View extends MX_Controller {
 		$this->load->library('form_validation');
 		$this->form_validation->set_error_delimiters('<span style="color:red">', '</span><br>');
 		$this->form_validation->set_rules('fullname', 'Full Name', 'required');
+		$this->form_validation->set_rules('staff_id', 'Staff ID', 'required');
 		if ($this->form_validation->run() == FALSE)
 		{
 				$this->session->set_flashdata('response_status', 'error');
@@ -43,6 +44,7 @@ class View extends MX_Controller {
 				redirect('users/account');
 		}else{	
 		$user_id =  $this->input->post('user_id');
+			$this->db->where('id',$user_id)->update('fx_users', array("staff_id"=>$this->input->post("staff_id"))); 
 			$profile_data = array(
 			                'fullname' => $this->input->post('fullname'),
                             'company' => $this->input->post('company'),

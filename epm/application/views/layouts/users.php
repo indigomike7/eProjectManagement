@@ -98,6 +98,7 @@
 	</script>
 	<script src="js/ie/excanvas.js" cache="false">
 	</script> <![endif]-->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 </head>
 <body>
 	<div class="vbox">
@@ -138,7 +139,6 @@
 			var locale = '<?=lang('lang_code')?>';
 			var base_url = '<?=base_url()?>';
 		</script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment-with-locales.min.js"></script>
 		<script src="<?=base_url()?>resource/js/app.js"></script>
 		<script src="<?=base_url()?>resource/js/charts/easypiechart/jquery.easy-pie-chart.js" cache="false"></script>
@@ -184,6 +184,38 @@
 		<!-- Bootstrap -->
 		<!-- js placed at the end of the document so the pages load faster -->
 		<?php  echo modules::run('sidebar/scripts');?>
+<script type="text/javascript">
+    jQuery(document).ready(
+            function()
+            {
+                $("#companies").change(
+                        function()
+                        {
+                                    $.ajax
+                                    ({
+                                            url:"<?php echo base_url();?>sales_order/get_client_contact/" + $("#companies").val()
+                                            ,data:""
+                                            ,method:"POST"
+                                    }).done
+                                    (
+                                            function( data2 ) {
+//                                            alert(data2);
+                                            var data=jQuery.parseJSON(data2);
+                                            $("#address").html(data.address);
+                                            $("#states").html(data.states);
+                                            $("#postco").html(data.post_co);
+                                            $("#person_contact").html(data.contact);
+                                            $("#mobile").html(data.mobile);
+                                            $("#office_no").html(data.phone);
+                                            $("#email").html(data.email);
+                                            $("#url").html(data.website);
+                                      });
 
+                            
+                        }
+                    );
+            }
+        );
+</script>
 	</body>
 	</html>
