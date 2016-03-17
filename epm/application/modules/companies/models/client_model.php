@@ -1,9 +1,9 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- *
- * @package	Freelancer Office
- */
+
+ * Michael Butarbutar @indigomike7
+ *  */
 class Client_model extends CI_Model
 {
 	function client_details($company)

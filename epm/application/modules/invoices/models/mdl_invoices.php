@@ -4,12 +4,8 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /*
- * Freelancer Office
- *
- * @package		Freelancer Office
- * @author		William M
- * @link		http://codecanyon.net/item/freelancer-office/8870728
- * 
+Michael Butarbutar @indigomike7
+ *  * 
  */
 
 class Mdl_Invoices extends CI_Model {

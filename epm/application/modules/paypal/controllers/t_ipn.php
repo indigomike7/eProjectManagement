@@ -1,8 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
- * 
- *
- * @package Freelancer Office
+ * Michael Butarbutar @indigomike7
  */
 class T_ipn extends MX_Controller {
 

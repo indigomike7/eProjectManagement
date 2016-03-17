@@ -2,8 +2,7 @@
 
 /**
  *
- * @package	Uniportal
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class Msg_model extends CI_Model
 {

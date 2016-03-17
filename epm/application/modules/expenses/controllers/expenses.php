@@ -1,14 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
- * freelancer office
- * 
- * A web based project manegement and invoicing system
- *
- * @package		Freelancer Office
- * @author		William M (www.gitbench.com)
- * @copyright	Copyright (c) 2013 - 2015
- * @license		http://envfolite.com/license.txt
- * @link		http://envfolite.com
+ * Michael Butarbutar @indigomike7
  * 
  */
 

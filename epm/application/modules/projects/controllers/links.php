@@ -4,16 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 /*
- * Freelancer Office
- * 
- * Web based project and invoicing management system available on codecanyon
- *
- * @package		Freelancer Office
- * @author		William M
- * @copyright	Copyright (c) 2014 - 2015 Gitbench, LLC
- * @license		http://codecanyon.net/wiki/support/legal-terms/licensing-terms/ 
- * @link		http://codecanyon.net/item/freelancer-office/8870728
- * 
+ * Michael Butarbutar @indigomike7
  */
 
 

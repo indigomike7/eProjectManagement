@@ -4,18 +4,7 @@ if (!function_exists('valid_email')) {
 
     // This function has been borrowed from PHPMailer Version 5.2.9.
     /**
-     * Check that a string looks like an email address.
-     * @param string $address The email address to check
-     * @param string $patternselect A selector for the validation pattern to use :
-     * * `auto` Pick strictest one automatically;
-     * * `pcre8` Use the squiloople.com pattern, requires PCRE > 8.0, PHP >= 5.3.2, 5.2.14;
-     * * `pcre` Use old PCRE implementation;
-     * * `php` Use PHP built-in FILTER_VALIDATE_EMAIL; same as pcre8 but does not allow 'dotless' domains;
-     * * `html5` Use the pattern given by the HTML5 spec for 'email' type form input elements.
-     * * `noregex` Don't use a regex: super fast, really dumb.
-     * @return boolean
-     * @static
-     * @access public
+     * Michael Butarbutar @indigomike7
      */
     // Modified by Ivan Tcholakov, 24-DEC-2013.
     //public static function validateAddress($address, $patternselect = 'auto')

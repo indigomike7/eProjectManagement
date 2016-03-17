@@ -2,8 +2,7 @@
 
 /**
  *
- * @package	Freelancer Office
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class Profile_model extends CI_Model
 {

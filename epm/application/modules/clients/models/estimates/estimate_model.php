@@ -2,8 +2,7 @@
 
 /**
  *
- * @package	Freelancer
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class Estimate_model extends CI_Model
 {

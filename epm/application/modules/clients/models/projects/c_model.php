@@ -2,8 +2,7 @@
 
 /**
  *
- * @package	Freelancer Office
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class C_model extends CI_Model
 {

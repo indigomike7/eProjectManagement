@@ -2,7 +2,7 @@
 /**
  * 
  *
- * @package	Freelancer Office
+ * @package
  */
 class bitcoin extends MX_Controller {
 	function __construct()

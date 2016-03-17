@@ -2,8 +2,7 @@
 
 /**
  *
- * @package	Freelancer
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class Invoice_model extends CI_Model
 {

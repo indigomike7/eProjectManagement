@@ -2,8 +2,8 @@
 /**
  * 
  *
- * @package	Freelancer Office
- */
+Michael Butarbutar @indigomike7
+ *  */
 class StripePay extends MX_Controller {
 
 	function __construct()

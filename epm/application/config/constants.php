@@ -40,7 +40,6 @@ define('USER_ADD_URL', 'api/example/payment/');
 
 
 
-define('UPDATE_URL', 'http://gitbench.com/updates/');
 
 
 /*

@@ -2,7 +2,6 @@
 /**
  *
  *
- * @package	Freelancer Office
  */
 class Checkout extends MX_Controller {
 

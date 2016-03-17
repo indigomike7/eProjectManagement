@@ -1,9 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- *
- * @package	Freelance Office
- * @author	William M
+ * Michael Butarbutar @indigomike7
  */
 class Welcome extends CI_Model
 {
