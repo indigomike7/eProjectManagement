@@ -14,6 +14,10 @@
                                     <textarea name="supplier_address" class="input-sm form-control" required><?=$supplier[0]->supplier_address?></textarea>
                             </div>
                             <div class="form-group">
+                                    <label>ZIP Code  <span class="text-danger">*</span></label>
+                                    <input type="text" name="supplier_zip_code" value="<?=$supplier[0]->supplier_zip_code?>" class="input-sm form-control" required>
+                            </div>
+                            <div class="form-group">
                                     <label>Phone  <span class="text-danger">*</span></label>
                                     <input type="text" name="supplier_phone" value="<?=$supplier[0]->supplier_phone?>" class="input-sm form-control" required>
                             </div>
@@ -28,10 +32,6 @@
                             <div class="form-group">
                                     <label>Mobile  <span class="text-danger">*</span></label>
                                     <input type="text" name="supplier_mobile" value="<?=$supplier[0]->supplier_mobile?>" class="input-sm form-control" required>
-                            </div>
-                            <div class="form-group">
-                                    <label>ZIP Code  <span class="text-danger">*</span></label>
-                                    <input type="text" name="supplier_zip_code" value="<?=$supplier[0]->supplier_zip_code?>" class="input-sm form-control" required>
                             </div>
     		<div class="modal-footer">
                     <a href="#" class="btn btn-default" data-dismiss="modal"><?=lang('close')?></a> 

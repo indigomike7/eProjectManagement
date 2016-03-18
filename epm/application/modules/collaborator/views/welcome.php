@@ -43,7 +43,11 @@
 						</span> <small class="text-muted text-uc"><?=lang('activities')?>  </small> </a>
 					</div>
 				</div> </section>
-				<div class="row">
+				<div class="row
+                                     <?php 
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'sales_admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' )
+                {
+                                         ?>
 					<div class="col-md-8">
 						<section class="panel panel-default">
 						<header class="panel-heading font-bold"> <?=lang('recent_projects')?></header>
@@ -117,7 +121,72 @@
 							</div> </footer>
 						</section>
 					</div>
-					
+					<?php
+                }
+                else
+                {
+                    ?>
+					<div class="col-md-8">
+						<section class="panel panel-default">
+						<header class="panel-heading font-bold"> Recent Sales Order</header>
+						<div class="panel-body">
+							
+							<table class="table table-striped m-b-none text-sm">
+								<thead>
+									<tr>
+                                                                            <th class="col-md-6">Sales Order Name </th>
+									</tr> </thead>
+									<tbody>
+										<?php
+										if (!empty($projects)) {
+										foreach ($projects as $key => $project) { ?>
+										<tr>
+											<?php
+											if ($project->auto_progress == 'FALSE') {
+											$progress = $project->progress;
+											}else{
+											$progress = round((($project->time_logged/3600)/$project->estimate_hours)*100,2);
+											} ?>
+                                                                                    <td><a href="<?=base_url()?>projects/view/<?=$project->project_id?>"><?=$project->project_title?></a></td>
+										</tr>
+										<?php }
+										}else{ ?>
+										<tr>
+											<td><?=lang('nothing_to_display')?></td><td></td><td></td>
+										</tr>
+										<?php } ?>
+										
+										
+									</tbody>
+								</table>
+							</div> <footer class="panel-footer bg-white no-padder">
+							<div class="row text-center no-gutter">
+								<div class="col-xs-3 b-r b-light">
+									<span class="h4 font-bold m-t block">
+									<?=$this->user_profile->count_rows('bugs',array('reporter'=>$user_id))?>
+									</span> <small class="text-muted m-b block"><?=lang('reported_bugs')?></small>
+								</div>
+								<div class="col-xs-3 b-r b-light">
+									<span class="h4 font-bold m-t block">
+									<?=$this->user_profile->count_rows('projects',array('progress >='=>'100','assign_to'=>$user_id))?>
+									</span> <small class="text-muted m-b block"><?=lang('complete_projects')?></small>
+								</div>
+								<div class="col-xs-3 b-r b-light">
+									<span class="h4 font-bold m-t block">
+									<?=$this->user_profile->count_rows('messages',array('user_to'=>$user_id,'status'=>'Unread'))?>
+									</span> <small class="text-muted m-b block"><?=lang('unread_messages')?></small>
+								</div>
+								<div class="col-xs-3">
+									<span class="h4 font-bold m-t block">
+									<?=$this->user_profile->count_rows('comments',array('posted_by'=>$user_id))?>
+									</span> <small class="text-muted m-b block"><?=lang('project_comments')?></small>
+								</div>
+							</div> </footer>
+						</section>
+					</div>
+                    <?php
+                }
+                                        ?>
 					<div class="col-lg-4">
 						<section class="panel panel-default">
 							<div class="panel-body">

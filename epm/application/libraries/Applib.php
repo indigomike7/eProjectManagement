@@ -268,7 +268,7 @@ class AppLib {
 			$ci -> session -> set_flashdata('message', lang('manually_rename_install'));
 		}
 	}
-	static function valid_sale(){
+/*	static function valid_sale(){
 		$ci =& get_instance();
 		if(config_item('valid_license') != 'TRUE'){
 			$ci -> session -> set_flashdata('response_status', 'error');
@@ -297,7 +297,7 @@ class AppLib {
 		$ci->session->set_flashdata('message', $msg);
 		redirect('settings?settings=system');
 	}
-
+*/
 	function redirect_to($redirect_url,$response,$message){
 		$this -> ci -> session -> set_flashdata('response_status', $response);
 		$this -> ci -> session -> set_flashdata('message', $message);
@@ -991,7 +991,7 @@ class AppLib {
 		return $output;
 	}
 
-
+/*
 
 	static function switchoff(){
 		Applib::update(Applib::$config_table,array('config_key'=>'valid_license'),array('value'=>'FALSE'));
@@ -1004,7 +1004,7 @@ class AppLib {
 		$purchase = self::$db->where('config_key','valid_license')->get(self::$config_table)->row();
 		return ($purchase->value == 'FALSE') ? 'not_validated' : 'validated';
 	}
-
+*/
 	function currencies($code = FALSE)
 	{
 		if (!$code) {

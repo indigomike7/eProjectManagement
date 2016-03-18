@@ -21,7 +21,12 @@
                         
                         <th>Sales Order No </th>
                         <th>Total Cost</th>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                        <th>Sales Leader Name</th>
+                        <th>Sales Leader ID</th>
+<?php } ?>
+                        <th>Sales Order date</th>
+    <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
                         <th class="col-options no-sort"></th>
 <?php } ?>
                       </tr> </thead> <tbody>
@@ -39,17 +44,37 @@
                       <td>
                           <?php
                               $total=0;
+                                              $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
+                            $array = array(
+                                    'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
+                    
+
                           if(!empty($sales_order_item))
                           {
-                              foreach($sales_order_item as $each)
+                              foreach($sales_order_item as $each2)
                               {
-                                  $total=$total+$each->total_cost;
+                                  if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
+                                        $total=$total+$each2->total_cost;
+                                  else
+                                        $total=$total+$each2->total_cost_2;
+                                      
                               }
                               
                           }
                           echo $total;
                       ?>
                       </td>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                        <td><?=$each->so_created_by?></td>
+                        <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
+//                echo print_r($users);
+                $staff_id=$users[0]->staff_id; echo $staff_id;
+?></td>
+<?php } ?>
+                        <td>
+
+
+                        <?=$each->so_date?></td>
 
                         
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 

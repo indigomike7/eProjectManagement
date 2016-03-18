@@ -55,7 +55,7 @@ class MX_Router extends CI_Router
 			$segments = explode('/', $this->routes['404_override']);
 			if ($located = $this->locate($segments)) return $located;
 		}
-		
+//		die();
 		/* no controller found */
 		show_404(implode('/', $segments));
 	}

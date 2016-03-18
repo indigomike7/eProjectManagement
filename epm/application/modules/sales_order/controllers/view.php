@@ -171,10 +171,12 @@ class View extends MX_Controller {
 
                                 
                     $procurement=array(
-                        "procurement"=>$this->input->post("procurement")
+                        "procurement"=>$this->input->post("procurement"),
+                        "supplier_id"=>$this->input->post("supplier")
                     );
+                    echo print_r($procurement);
                     $this->db->where("so_id",$id)->update("fx_sales_order",$procurement);
-                    redirect(base_url()."sales_order/view/item_details/".$id);
+                    //redirect(base_url()."sales_order/view/item_details/".$id);
                 }
             }
             
@@ -200,9 +202,12 @@ class View extends MX_Controller {
                             'fx_roles.role =' => "e_procurement"),$join_table = 'fx_roles',$join_criteria = 'fx_roles.r_id=fx_users.role_id','id');
                 $this->db->where('LOWER(username)=', strtolower($data['sales_order'][0]->so_created_by));
 
-		$users = $this->db->get("fx_users")->result();
+		$users = $this->db->where("username",$data["sales_order"][0]->so_created_by)->get("fx_users")->result();
 //                echo print_r($users);
                 $data['staff_id']=$users[0]->staff_id;
+                $data["supplier"]=$this->AppModel->get_all_records($table = 'fx_suppliers',
+                    $array = array(
+                            'supplier_id >' => "0"),$join_table = '',$join_criteria = '','supplier_id');
 
                 
                 $this->template
@@ -381,6 +386,54 @@ class View extends MX_Controller {
             else
             {
                 $this->load->view('modal/delete_item',$data);
+            }
+	}
+	function delete_client_quotation()
+	{
+            $data['so_id'] = $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order_item_id');
+                }else{
+                        $so_id = $this->input->post('so_id');
+                        $data=array("client_quotation_file"=>"");
+                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        redirect(base_url()."sales_order/view/item_details/".$so_id);
+                }
+            }
+            else
+            {
+                $this->load->view('modal/delete_client_quotation_file',$data);
+            }
+	}
+	function delete_quotation()
+	{
+            $data['so_id'] = $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order_item_id');
+                }else{
+                        $so_id = $this->input->post('so_id');
+                        $data=array("quotation_file"=>"");
+                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        redirect(base_url()."sales_order/view/item_details/".$so_id);
+                }
+            }
+            else
+            {
+                $this->load->view('modal/delete_quotation_file',$data);
             }
 	}
 	function approve_item()

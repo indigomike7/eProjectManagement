@@ -23,7 +23,7 @@
                                         }
                                         ?>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-lg-6">
                                 <label>Address</label><br/>
                                 <span id="address"><?=$clients2[0]->company_address?></span><br/>
                                 <label>States</label><br/>
@@ -31,7 +31,7 @@
                                 <label>Post co</label><br/>
                                 <span id="postco"><?=$clients2[0]->zip?></span><br/>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-lg-6">
                                 <label>Contact</label><br/>
                                 <span id="person_contact"><?=$clients2[0]->company_name?></span><br/>
                                 <label>Mobile</label><br/>
@@ -44,11 +44,11 @@
                                 <span id="url"><?=$clients2[0]->company_website?></span><br/>
                             </div>
                             <div style="clear:left;"></div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                     <label>Sales Order Number <span class="text-danger">*</span></label><br/>
                                     <?=$sales_order[0]->so_number?>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                     <label>Sales Order Date </label><br/>
                                     <?=$date?>
                             </div>
@@ -57,7 +57,7 @@
                 {
 
 ?>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                 <label>Assigned Admin</label><br/>
                                 <?php foreach ($assigned_to as $each) : ?>
                                         <?php
@@ -68,21 +68,19 @@
                                         ?>
                                 <?php endforeach; ?>
                             </div>
-                        </div>
 <?php
 ?>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                 <label>Sales Leader</label><br/>
                                 <?=$sales_order[0]->so_created_by?>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6">
                                 <label>Sales Leader ID</label><br/>
                                 <?=$staff_id?>
                             </div>
 <?php
                 }
                 ?>
-                        </div>
                         <p align="right">
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
     <a href="<?=base_url()?>sales_order/view/create_item/<?=$so_id?>" class="btn btn-<?=config_item('theme_color');?> btn-sm pull-right" title="New Items" data-placement="bottom"  data-toggle="ajaxModal" ><i class="fa fa-plus"></i> New Items</a>
@@ -185,15 +183,21 @@
 if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' ) {  
 			echo '<form action="'.base_url().'sales_order/view/item_details/'.$sales_order[0]->so_id.'" method="post" enctype="multipart/form-data">'; ?>
                             <div class="form-group">
-                                    <label>Upload Client quotation <span class="text-danger">*</span></label><br/>
-                                    <input type="hidden" name="so_id" value="<?=$sales_order[0]->so_id?>">
-                                    <input type="file" name="client_quotation_file"  class="form-control" >
-                                    <a href="<?=base_url().$sales_order[0]->client_quotation_file?>"><?=$sales_order[0]->client_quotation_file?></a>
-                            </div>
-                            <div class="form-group">
                                     <label>Upload Supplier Quotation </label><br/>
                                     <input type="file" name="quotation_file"  class="form-control" >
-                                    <a href="<?=base_url().$sales_order[0]->quotation_file?>"><?=$sales_order[0]->quotation_file?></a>
+                                    <a href="<?=base_url().$sales_order[0]->quotation_file?>" target="_blank"><?=$sales_order[0]->quotation_file?></a>
+                                    <?php if($sales_order[0]->quotation_file!="") { ?>
+                                    <a href="<?=base_url()?>sales_order/view/delete_quotation/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a>
+                                    <?php } ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Upload Client Quotation</label><br/>
+                                    <input type="hidden" name="so_id" value="<?=$sales_order[0]->so_id?>">
+                                    <input type="file" name="client_quotation_file"  class="form-control" target="_blank">
+                                    <a href="<?=base_url().$sales_order[0]->client_quotation_file?>"><?=$sales_order[0]->client_quotation_file?></a>
+                                    <?php if($sales_order[0]->client_quotation_file!="") { ?>
+                                    <a href="<?=base_url()?>sales_order/view/delete_client_quotation/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a>
+                                    <?php } ?>
                             </div>
                             <div class="form-group">
                                     <label>Assign Procurement </label><br/>
@@ -211,6 +215,21 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
                                         </select>
                             </div>
                             <div class="form-group">
+                                    <label>Supplier </label><br/>
+                                    <select name="supplier">
+                                        <option></option>
+                                        <?php 
+                                        if(!empty($supplier))
+                                        {
+                                            foreach($supplier as $each)
+                                            {
+                                                echo '<option value="'.$each->supplier_id.'" '.($sales_order[0]->supplier_id==$each->supplier_id ? ' selected="selected" ' : '').'>'.$each->supplier_name.'</option>';
+                                            }
+                                        }
+                                    ?>
+                                        </select>
+                            </div>
+                            <div class="form-group">
                     <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit</button>
                             </div>
                </form>
@@ -220,11 +239,11 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
 			echo '<form action="'.base_url().'sales_order/view/print_quotation" method="post" enctype="multipart/form-data">'; ?>
                             
                             <div class="form-group">
-                                <a href="<?=base_url().$sales_order[0]->client_quotation_file?>"><?=$sales_order[0]->client_quotation_file?></a>
-                            </div>
-                            <div class="form-group">
                                 <input type="hidden" name="so_id" value="<?=$so_id?>">
                                     <a href="<?=base_url().$sales_order[0]->quotation_file?>"><?=$sales_order[0]->quotation_file?></a>
+                            </div>
+                            <div class="form-group">
+                                <a href="<?=base_url().$sales_order[0]->client_quotation_file?>"target="_blank"><?=$sales_order[0]->client_quotation_file?></a>
                             </div>
                             <div class="form-group">
                     <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit quotation</button>
@@ -235,6 +254,8 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
               </div>
 
                         <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
+                        </div>
+                    </div>
             </section>
         </section>
 </section>

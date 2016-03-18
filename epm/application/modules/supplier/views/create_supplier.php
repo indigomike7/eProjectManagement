@@ -15,6 +15,10 @@
                                     <textarea name="supplier_address" class="input-sm form-control" required></textarea>
                             </div>
                             <div class="form-group">
+                                    <label>ZIP Code  <span class="text-danger">*</span></label>
+                                    <input type="text" name="supplier_zip_code" value="" class="input-sm form-control" required>
+                            </div>
+                            <div class="form-group">
                                     <label>Phone  <span class="text-danger">*</span></label>
                                     <input type="text" name="supplier_phone" value="" class="input-sm form-control" required>
                             </div>
@@ -29,10 +33,6 @@
                             <div class="form-group">
                                     <label>Mobile  <span class="text-danger">*</span></label>
                                     <input type="text" name="supplier_mobile" value="" class="input-sm form-control" required>
-                            </div>
-                            <div class="form-group">
-                                    <label>ZIP Code  <span class="text-danger">*</span></label>
-                                    <input type="text" name="supplier_zip_code" value="" class="input-sm form-control" required>
                             </div>
                         </div>
                         <a href="<?php echo base_url();?>supplier" class="btn btn-default" >Cancel</a>
