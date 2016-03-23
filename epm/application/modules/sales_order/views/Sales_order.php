@@ -24,6 +24,7 @@
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                         <th>Sales Leader Name</th>
                         <th>Sales Leader ID</th>
+                        <th>Status</th>
 <?php } ?>
                         <th>Sales Order date</th>
     <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
@@ -70,6 +71,8 @@
 //                echo print_r($users);
                 $staff_id=$users[0]->staff_id; echo $staff_id;
 ?></td>
+<td>
+                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : "")  ?></a></td>
 <?php } ?>
                         <td>
 

@@ -83,19 +83,57 @@ class View extends MX_Controller {
             $data['languages'] = $this -> applib -> languages();
                         if ($this->input->post()) 
             {
-                    if(file_exists($_FILES['uploaded_file']['tmp_name']) || is_uploaded_file($_FILES['uploaded_file']['tmp_name'])) {
+                            
+                        $id=$this->input->post("procurement_id");
+                        if(isset($_FILES['invoice_file']))
+                        {
+                    for($i=0;$i<count($_FILES['invoice_file']['name']);$i++)
+                    {
+                    if(file_exists($_FILES['invoice_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['client_quotation_file']['tmp_name'][$i])) {
+                $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
+                if(!file_exists($config['upload_path']))
+                    mkdir($config['upload_path'], 0777, true);
+                $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png|gif|xls|xlsx';
+                $config['file_name'] = $_FILES['invoice_file']['name'][$i];
+                $config['overwrite'] = TRUE;
+                //echo print_r($config);
+                $this->load->library('upload', $config);
+
+                if ( ! @move_uploaded_file($_FILES['invoice_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                                {
+                                        $this->session->set_flashdata('response_status', 'error');
+                                        $this->session->set_flashdata('message',"Error Upload Client Quotation File");
+//                                        redirect(base_url()."sales_order/view/item_details/".$so_id);
+                                }
+                                else
+                                {
+                                        $data2["file_name"] = $config['upload_path'].'/'.$config['file_name'];
+//										$file_name = $this->profile_model->update_avatar($data['file_name']);
+
+                                }
+                        $client_quotation_file=array("files"=>$data2['file_name'],"procurement_id"=>$id,"type"=>"invoice_file");
+                $this->db->insert("fx_procurement_files",$client_quotation_file);
+                        }
+                    }
+                        }
+
+                        if(isset($_FILES['po_file']))
+                        {
+                for($i=0;$i<count($_FILES['po_file']['name']);$i++)
+                {
+                    if(file_exists($_FILES['po_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['po_file']['tmp_name'][$i])) {
 
                 $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
                 //echo $config['upload_path'];
                 if(!file_exists($config['upload_path']))
                     mkdir($config['upload_path'], 0777, true);
                 $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png';
-                $config['file_name'] = $_FILES['uploaded_file']['name'];
+                $config['file_name'] = $_FILES['po_file']['name'][$i];
                 $config['overwrite'] = TRUE;
 
                 $this->load->library('upload', $config);
 
-                if (! @move_uploaded_file($_FILES['uploaded_file']['tmp_name'], $config['upload_path'].'/'.$config['file_name']))
+                if (! @move_uploaded_file($_FILES['po_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
                                 {
                                         $this->session->set_flashdata('response_status', 'error');
                                         $this->session->set_flashdata('message',"Error Upload Quotation File");
@@ -107,9 +145,11 @@ class View extends MX_Controller {
 //										$file_name = $this->profile_model->update_avatar($data['file_name']);
 
                                 }
-                        $upload_file=array("uploaded_file"=>$data2['file_name']);
-              $this->db->where('procurement_id',$procurement_id)->update("fx_procurement",$upload_file);
+                        $quotation_file=array("files"=>$data2['file_name'],"procurement_id"=>$id,"type"=>"po_file");
+              $this->db->insert("fx_procurement_files",$quotation_file);
                         }
+                }
+            }
             }
                 $data["procurement"]=$this->AppModel->get_all_records($table = 'fx_procurement',
                     $array = array(
@@ -123,7 +163,32 @@ class View extends MX_Controller {
             ->build('modal/view_item',isset($data) ? $data : NULL);
 
 	}
-	function delete()
+	function delete_quotation()
+	{
+            $data['f_id'] = $this->uri->segment(4);
+            $data['procurement_id'] = $this->uri->segment(5);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('procurement_id','Procurement ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('procurement_item_id');
+                }else{
+                        $f_id = $this->input->post('f_id');
+                        $procurement_id = $this->input->post('procurement_id');
+                        $this->db->where(array("f_id"=>$f_id))->delete("fx_procurement_files");
+                        redirect(base_url()."procurement/view/item_details/".$procurement_id);
+                }
+            }
+            else
+            {
+                $this->load->view('modal/delete_quotation_file',$data);
+            }
+	}
+        function delete()
 	{
             $data['procurement_id'] = $this->uri->segment(4);
             if ($this->input->post()) 

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 18, 2016 at 05:22 PM
+-- Generation Time: Mar 23, 2016 at 12:07 PM
 -- Server version: 5.6.24
 -- PHP Version: 5.5.24
 
@@ -1528,7 +1528,14 @@ CREATE TABLE IF NOT EXISTS `fx_login_attempts` (
   `ip_address` varchar(40) NOT NULL,
   `login` varchar(50) NOT NULL,
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `fx_login_attempts`
+--
+
+INSERT INTO `fx_login_attempts` (`id`, `ip_address`, `login`, `time`) VALUES
+(2, '::1', 'finance', '2016-03-23 09:40:57');
 
 -- --------------------------------------------------------
 
@@ -1757,6 +1764,28 @@ INSERT INTO `fx_procurement` (`procurement_id`, `p_number`, `p_date`, `created_b
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `fx_procurement_files`
+--
+
+CREATE TABLE IF NOT EXISTS `fx_procurement_files` (
+  `f_id` int(11) NOT NULL,
+  `procurement_id` int(11) NOT NULL,
+  `files` varchar(8000) NOT NULL,
+  `type` varchar(8000) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `fx_procurement_files`
+--
+
+INSERT INTO `fx_procurement_files` (`f_id`, `procurement_id`, `files`, `type`) VALUES
+(2, 2, 'user/procurement/meeting function.jpg', 'po_file'),
+(4, 2, 'user/efinance/eDMS.xlsx', 'invoice_file'),
+(5, 2, 'user/efinance/meeting function.jpg', 'invoice_file');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `fx_procurement_items`
 --
 
@@ -1940,18 +1969,42 @@ CREATE TABLE IF NOT EXISTS `fx_sales_order` (
   `quotation_file` varchar(8000) NOT NULL,
   `client_quotation_file` varchar(8000) NOT NULL,
   `procurement` int(11) NOT NULL,
-  `supplier_id` int(11) NOT NULL
+  `supplier_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `fx_sales_order`
 --
 
-INSERT INTO `fx_sales_order` (`so_id`, `so_number`, `so_date`, `so_created_by`, `so_admin`, `so_client_id`, `quotation_file`, `client_quotation_file`, `procurement`, `supplier_id`) VALUES
-(1, '0001', '1970-01-30 00:00:00', 'salesleader', 14, 1, '', '', 0, 0),
-(3, 'SO-00001', '2016-03-31 00:00:00', 'salesleader', 14, 5, '', '', 0, 0),
-(4, 'SA002', '2016-03-12 00:00:00', 'salesleader', 14, 5, '', '', 17, 3),
-(5, 'SO00012', '2016-03-31 00:00:00', 'salesleader', 14, 5, '', '', 0, 0);
+INSERT INTO `fx_sales_order` (`so_id`, `so_number`, `so_date`, `so_created_by`, `so_admin`, `so_client_id`, `quotation_file`, `client_quotation_file`, `procurement`, `supplier_id`, `status`) VALUES
+(1, '0001', '1970-01-30 00:00:00', 'salesleader', 14, 1, '', '', 0, 0, 0),
+(3, 'SO-00001', '2016-03-31 00:00:00', 'salesleader', 14, 5, '', '', 17, 3, 0),
+(4, 'SA002', '2016-03-12 00:00:00', 'salesleader', 14, 5, '', '', 17, 3, 1),
+(5, 'SO00012', '2016-03-31 00:00:00', 'salesleader', 14, 5, '', '', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `fx_sales_order_files`
+--
+
+CREATE TABLE IF NOT EXISTS `fx_sales_order_files` (
+  `f_id` int(11) NOT NULL,
+  `so_id` int(11) NOT NULL,
+  `files` varchar(8000) NOT NULL,
+  `type` varchar(8000) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `fx_sales_order_files`
+--
+
+INSERT INTO `fx_sales_order_files` (`f_id`, `so_id`, `files`, `type`) VALUES
+(3, 3, 'user/salesadmin/eDMS.xlsx', 'client_quotation_file'),
+(4, 3, 'user/salesadmin/meeting function.jpg', 'client_quotation_file'),
+(5, 3, 'user/salesadmin/eDMS.xlsx', 'quotation_file'),
+(6, 3, 'user/salesadmin/meeting function.jpg', 'quotation_file');
 
 -- --------------------------------------------------------
 
@@ -1974,20 +2027,24 @@ CREATE TABLE IF NOT EXISTS `fx_sales_order_items` (
   `sub_cost_2` decimal(18,2) NOT NULL,
   `cost_2` decimal(18,2) NOT NULL,
   `total_cost_2` decimal(18,2) NOT NULL,
-  `currency_2` varchar(255) NOT NULL
+  `currency_2` varchar(255) NOT NULL,
+  `unit_cost_p` decimal(18,2) NOT NULL,
+  `sub_cost_p` decimal(18,2) NOT NULL,
+  `cost_p` decimal(18,2) NOT NULL,
+  `total_cost_p` decimal(18,2) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `fx_sales_order_items`
 --
 
-INSERT INTO `fx_sales_order_items` (`soi_id`, `soi_so_id`, `description`, `quantity`, `unit_cost`, `currency`, `sub_cost`, `cost`, `total_cost`, `status`, `unit_cost_2`, `sub_cost_2`, `cost_2`, `total_cost_2`, `currency_2`) VALUES
-(8, 1, 'unit 3', 40, '40.00', 'USD', '40.00', '40.00', '40.00', 1, '0.00', '0.00', '0.00', '0.00', ''),
-(9, 3, 'Item 3', 50, '5.00', '', '6.00', '7.00', '8.00', 0, '500.00', '499.00', '488.00', '466.00', 'AUD'),
-(10, 3, 'Item 2', 5000, '5010.00', 'AUD', '4995.00', '4885.00', '4775.00', 0, '500.00', '499.00', '488.00', '477.00', 'AUD'),
-(11, 4, 'HP Server 486', 1, '0.00', '', '0.00', '0.00', '0.00', 2, '0.00', '0.00', '0.00', '0.00', ''),
-(12, 4, 'HP - Compact Model HP45500', 2, '6000.00', 'MYR', '5000.00', '6000.00', '7000.00', 1, '0.00', '0.00', '0.00', '0.00', ''),
-(13, 4, 'Asus Ram 486 - 2GB', 1, '50.00', 'MYR', '45.00', '55.00', '60.00', 1, '1000.00', '1000.00', '12000.00', '1230.00', 'MYR');
+INSERT INTO `fx_sales_order_items` (`soi_id`, `soi_so_id`, `description`, `quantity`, `unit_cost`, `currency`, `sub_cost`, `cost`, `total_cost`, `status`, `unit_cost_2`, `sub_cost_2`, `cost_2`, `total_cost_2`, `currency_2`, `unit_cost_p`, `sub_cost_p`, `cost_p`, `total_cost_p`) VALUES
+(8, 1, 'unit 3', 40, '40.00', 'USD', '40.00', '40.00', '40.00', 1, '0.00', '0.00', '0.00', '0.00', '', '0.00', '0.00', '0.00', '0.00'),
+(9, 3, 'Item 3', 50, '5.00', '', '6.00', '7.00', '8.00', 0, '500.00', '499.00', '488.00', '466.00', 'AUD', '0.00', '0.00', '0.00', '0.00'),
+(10, 3, 'Item 2', 5000, '5010.00', 'AUD', '4995.00', '4885.00', '4775.00', 0, '500.00', '499.00', '488.00', '477.00', 'AUD', '0.00', '0.00', '0.00', '0.00'),
+(11, 4, 'HP Server 486', 1, '0.00', '', '0.00', '0.00', '0.00', 2, '0.00', '0.00', '0.00', '0.00', '', '0.00', '0.00', '0.00', '0.00'),
+(12, 4, 'HP - Compact Model HP45500', 2, '6000.00', 'MYR', '5000.00', '6000.00', '7000.00', 1, '0.00', '0.00', '0.00', '0.00', '', '0.00', '0.00', '0.00', '0.00'),
+(13, 4, 'Asus Ram 486 - 2GB', 1, '50.00', 'MYR', '45.00', '55.00', '60.00', 1, '1000.00', '1000.00', '12000.00', '1230.00', 'MYR', '1700.00', '1800.00', '1800.00', '1800.00');
 
 -- --------------------------------------------------------
 
@@ -2194,9 +2251,7 @@ CREATE TABLE IF NOT EXISTS `fx_un_sessions` (
 --
 
 INSERT INTO `fx_un_sessions` (`session_id`, `ip_address`, `user_agent`, `last_activity`, `user_data`) VALUES
-('13c28e0b03206537e90843a8a6ae9e7f', '::1', 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.75 Safari/537.36 OPR/36.0.2130.32', 1458290095, 'a:7:{s:9:"user_data";s:0:"";s:7:"user_id";s:2:"14";s:8:"username";s:10:"salesadmin";s:7:"role_id";s:2:"11";s:6:"status";s:1:"1";s:14:"requested_page";s:55:"http://localhost/pm/epm/sales_order/view/item_details/4";s:13:"previous_page";s:55:"http://localhost/pm/epm/sales_order/view/item_details/4";}'),
-('2708494dead2ab0ba7263e794cad0dc0', '::1', 'Mozilla/5.0 (Windows NT 6.1; rv:44.0) Gecko/20100101 Firefox/44.0', 1458293222, 'a:7:{s:9:"user_data";s:0:"";s:7:"user_id";s:2:"14";s:8:"username";s:10:"salesadmin";s:7:"role_id";s:2:"11";s:6:"status";s:1:"1";s:14:"requested_page";s:55:"http://localhost/pm/epm/sales_order/view/item_details/4";s:13:"previous_page";s:55:"http://localhost/pm/epm/sales_order/view/item_details/4";}'),
-('e03b6ea113d9df2db75c84648c38d270', '::1', 'Mozilla/5.0 (Windows NT 6.1; rv:44.0) Gecko/20100101 Firefox/44.0', 1458303334, 'a:7:{s:9:"user_data";s:0:"";s:14:"requested_page";s:36:"http://localhost/pm/epm/collaborator";s:7:"user_id";s:2:"14";s:8:"username";s:10:"salesadmin";s:7:"role_id";s:2:"11";s:6:"status";s:1:"1";s:13:"previous_page";s:36:"http://localhost/pm/epm/collaborator";}');
+('ab4e77d63e7e1be91e8aca62fad5c66a', '::1', 'Mozilla/5.0 (Windows NT 6.1; rv:44.0) Gecko/20100101 Firefox/44.0', 1458730787, 'a:7:{s:9:"user_data";s:0:"";s:7:"user_id";s:2:"10";s:8:"username";s:8:"efinance";s:7:"role_id";s:1:"6";s:6:"status";s:1:"1";s:14:"requested_page";s:55:"http://localhost/pm/epm/procurement/view/item_details/2";s:13:"previous_page";s:55:"http://localhost/pm/epm/procurement/view/item_details/2";}');
 
 -- --------------------------------------------------------
 
@@ -2258,13 +2313,13 @@ INSERT INTO `fx_users` (`id`, `username`, `password`, `email`, `role_id`, `activ
 (6, 'client', '$P$BbgCdTpw65NzhFx0IEPRRYiOdcFcD6/', 'client@gmail.com', 2, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-02-22 10:55:11', '', '2016-02-22 04:33:14', '2016-02-22 10:55:11', ''),
 (8, 'ehr', '$P$Bn77pIdq5m0hGw3k6tS98n7AaXSNtr/', 'ehr@solution.co.id', 8, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-18 03:25:04', 'USER-EHR-CV.pdf', '2016-02-22 06:50:09', '2016-03-18 03:25:04', ''),
 (9, 'ebusiness', '$P$B.kQ.Q0C12UxD7enzevyP53pT1Q7FZ0', 'ebusiness@gmail.com', 7, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-10 09:02:13', '', '2016-02-22 08:21:32', '2016-03-10 09:02:13', ''),
-(10, 'efinance', '$P$BktMyxAyp3aM6/ILx43dOTtIC6x2b50', 'efinance@gmail.com', 6, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-17 02:54:32', '', '2016-02-22 08:22:49', '2016-03-17 02:54:32', ''),
+(10, 'efinance', '$P$BktMyxAyp3aM6/ILx43dOTtIC6x2b50', 'efinance@gmail.com', 6, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-23 11:00:02', '', '2016-02-22 08:22:49', '2016-03-23 11:00:02', ''),
 (11, 'projectmanager', '$P$B132zTByvqTW6wsDpDYBAl7nhQXL6f0', 'projectmanager@gmail.com', 9, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-16 02:25:07', 'USER-PROJECTMANAGER-CV.pdf', '2016-02-23 02:47:59', '2016-03-16 02:25:07', ''),
 (13, 'test', '$P$BV3evbWlo2rVBXCa77cdV.0Dykw.9W/', 'test@test.com', 1, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '0000-00-00 00:00:00', '', '2016-03-01 02:42:23', '2016-03-01 02:42:23', ''),
-(14, 'salesadmin', '$P$B6tBLgg4k2FvsEQHFQ0LyzMFAkLCWS0', 'salesadmin@gmail.com', 11, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-18 12:04:29', 'USER-SALESADMIN-CV.pdf', '2016-03-10 02:52:18', '2016-03-18 12:04:29', ''),
+(14, 'salesadmin', '$P$B6tBLgg4k2FvsEQHFQ0LyzMFAkLCWS0', 'salesadmin@gmail.com', 11, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-23 06:45:29', 'USER-SALESADMIN-CV.pdf', '2016-03-10 02:52:18', '2016-03-23 06:45:29', ''),
 (15, 'salesleader', '$P$Bdv2olPt.tsBha9Fw0eX2W9IsrT7hi0', 'salesleader@gmail.com', 12, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-15 02:48:47', '', '2016-03-10 02:53:04', '2016-03-15 03:36:17', 'SL0001'),
-(16, 'salesmanager', '$P$BRN6pV8FN4pADV2srrYYOTRWIuMTGD.', 'salesmanager@gmail.com', 13, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-17 01:41:24', '', '2016-03-12 00:08:52', '2016-03-17 01:41:24', ''),
-(17, 'procurement', '$P$Bg03WS0FmizYDFaNk3DNBhjMXuIGH31', 'indigomike7@gmail.com', 14, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-16 23:05:57', '', '2016-03-16 01:08:12', '2016-03-16 23:05:57', '');
+(16, 'salesmanager', '$P$BRN6pV8FN4pADV2srrYYOTRWIuMTGD.', 'salesmanager@gmail.com', 13, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-21 09:39:51', '', '2016-03-12 00:08:52', '2016-03-21 09:39:51', ''),
+(17, 'procurement', '$P$Bg03WS0FmizYDFaNk3DNBhjMXuIGH31', 'indigomike7@gmail.com', 14, 1, 0, NULL, NULL, NULL, NULL, NULL, '::1', '2016-03-23 09:59:16', '', '2016-03-16 01:08:12', '2016-03-23 09:59:16', '');
 
 -- --------------------------------------------------------
 
@@ -2539,6 +2594,12 @@ ALTER TABLE `fx_procurement`
   ADD PRIMARY KEY (`procurement_id`);
 
 --
+-- Indexes for table `fx_procurement_files`
+--
+ALTER TABLE `fx_procurement_files`
+  ADD PRIMARY KEY (`f_id`);
+
+--
 -- Indexes for table `fx_procurement_items`
 --
 ALTER TABLE `fx_procurement_items`
@@ -2579,6 +2640,12 @@ ALTER TABLE `fx_roles`
 --
 ALTER TABLE `fx_sales_order`
   ADD PRIMARY KEY (`so_id`);
+
+--
+-- Indexes for table `fx_sales_order_files`
+--
+ALTER TABLE `fx_sales_order_files`
+  ADD PRIMARY KEY (`f_id`);
 
 --
 -- Indexes for table `fx_sales_order_items`
@@ -2812,7 +2879,7 @@ ALTER TABLE `fx_links`
 -- AUTO_INCREMENT for table `fx_login_attempts`
 --
 ALTER TABLE `fx_login_attempts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `fx_messages`
 --
@@ -2859,6 +2926,11 @@ ALTER TABLE `fx_price_items`
 ALTER TABLE `fx_procurement`
   MODIFY `procurement_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `fx_procurement_files`
+--
+ALTER TABLE `fx_procurement_files`
+  MODIFY `f_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
 -- AUTO_INCREMENT for table `fx_procurement_items`
 --
 ALTER TABLE `fx_procurement_items`
@@ -2893,6 +2965,11 @@ ALTER TABLE `fx_roles`
 --
 ALTER TABLE `fx_sales_order`
   MODIFY `so_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `fx_sales_order_files`
+--
+ALTER TABLE `fx_sales_order_files`
+  MODIFY `f_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `fx_sales_order_items`
 --

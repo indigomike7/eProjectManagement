@@ -14,7 +14,7 @@ class Sales_order extends MX_Controller {
 		$this->load->library(array('tank_auth','form_validation'));
 		$this -> form_validation -> set_error_delimiters('<span style="color:red">', '</span><br>');
 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager')
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_procurement' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_finance')
                 {
                     $this->session->set_flashdata('message', lang('access_denied'));
                     redirect('');
@@ -44,13 +44,52 @@ class Sales_order extends MX_Controller {
 */
                 $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
-                                    'so_id >' => '0'),$join_table = '',$join_criteria = '','so_id');
+                                    'status != ' => '1'),$join_table = '',$join_criteria = '','so_id');
+                    
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '1', 'procurement = ' => $this->tank_auth->get_user_id()),$join_table = '',$join_criteria = '','so_id');
+
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '1'),$join_table = '',$join_criteria = '','so_id');
+                /*                }*/
+                    
+				$this->template
+				->set_layout('users')
+				->build('sales_order',isset($data) ? $data : NULL);
+	}
+	function approved()
+	{
+		$this->load->module('layouts');
+		$this->load->library('template');
+		$this->template->title(' Sales Order ');
+		$data['page'] = lang('clients');
+		$data['datatables'] = TRUE;
+		$data['form'] = TRUE;
+		$data['currencies'] = $this -> applib -> currencies();
+		$data['languages'] = $this -> applib -> languages();
+
+/*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
+                {
+                    $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'so_admin =' => $this->tank_auth->get_user_id()),$join_table = '',$join_criteria = '','so_id');
+                }
+                else
+                {
+*/
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '1'),$join_table = '',$join_criteria = '','so_id');
                     
 /*                }*/
                     
 				$this->template
 				->set_layout('users')
-				->build('sales_order',isset($data) ? $data : NULL);
+				->build('approved',isset($data) ? $data : NULL);
 	}
         function get_client_contact()
         {

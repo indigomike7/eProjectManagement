@@ -8,6 +8,7 @@
 			<p>Are you sure to delete this file?</p>
 			
 			<input type="hidden" name="so_id" value="<?=$so_id?>">
+			<input type="hidden" name="f_id" value="<?=$f_id?>">
 
 		</div>
 		<div class="modal-footer"> <a href="#" class="btn btn-default" data-dismiss="modal"><?=lang('close')?></a>

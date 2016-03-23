@@ -93,7 +93,7 @@
                         
                         <th>Description </th>
                         <th>Qty</th>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager') { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                         
                         <th>Units Cost</th>
                         <th>Sub Cost</th>
@@ -101,12 +101,19 @@
                         <th>Total Cost</th>
                         <th>Status</th>
 <?php } ?>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager'  ) { ?> 
                         
                         <th>Units Cost (Manager Edit)</th>
                         <th>Sub Cost (Manager Edit)</th>
                         <th>Cost (Manager Edit)</th>
                         <th>Total Cost (Manager Edit)</th>
+<?php } ?>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance') { ?> 
+                    <style>body { width:200%; } </style>
+                        <th>Units Cost (Procurement Edit)</th>
+                        <th>Sub Cost (Procurement Edit)</th>
+                        <th>Cost (Procurement Edit)</th>
+                        <th>Total Cost (Procurement Edit)</th>
 <?php } ?>
                         <th class="col-options no-sort"></th>
                       </tr> </thead> <tbody>
@@ -148,6 +155,18 @@
 <?php
 }
 ?>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement') { ?> 
+                      <td>
+                        <?=$each->unit_cost_p=="0.00" ? ($each->unit_cost_2 == "0.00" ? $each->unit_cost : $each->unit_cost_2 ) : $each->unit_cost_p?></td>
+                      <td>
+                        <?=$each->sub_cost_p=="0.00" ? ($each->sub_cost_2 == "0.00" ? $each->sub_cost : $each->sub_cost_2 ) : $each->sub_cost_p?></td>
+                      <td>
+                        <?=$each->cost_p=="0.00" ? ($each->cost_2 == "0.00" ? $each->cost : $each->cost_2 ) : $each->cost_p?></td>
+                      <td>
+                        <?=$each->total_cost_p=="0.00" ? ($each->total_cost_2 == "0.00" ? $each->total_cost : $each->total_cost_2 ) : $each->total_cost_p?></td>
+<?php
+}
+?>
                       <td>
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
                         <a href="<?=base_url()?>sales_order/view/details_item/<?=$each->soi_id?>/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal"  title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
@@ -158,6 +177,9 @@
 <?php } ?>
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                         <a href="<?=base_url()?>sales_order/view/details_item_manager/<?=$each->soi_id?>/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal"  title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
+<?php } ?>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' ) { ?> 
+                        <a href="<?=base_url()?>sales_order/view/details_item_procurement/<?=$each->soi_id?>/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal"  title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
 <?php } ?>
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
 <?php if ($each->status=="1" ) { ?> 
@@ -184,35 +206,17 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
 			echo '<form action="'.base_url().'sales_order/view/item_details/'.$sales_order[0]->so_id.'" method="post" enctype="multipart/form-data">'; ?>
                             <div class="form-group">
                                     <label>Upload Supplier Quotation </label><br/>
-                                    <input type="file" name="quotation_file"  class="form-control" >
-                                    <a href="<?=base_url().$sales_order[0]->quotation_file?>" target="_blank"><?=$sales_order[0]->quotation_file?></a>
-                                    <?php if($sales_order[0]->quotation_file!="") { ?>
-                                    <a href="<?=base_url()?>sales_order/view/delete_quotation/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a>
-                                    <?php } ?>
-                            </div>
-                            <div class="form-group">
-                                    <label>Upload Client Quotation</label><br/>
-                                    <input type="hidden" name="so_id" value="<?=$sales_order[0]->so_id?>">
-                                    <input type="file" name="client_quotation_file"  class="form-control" target="_blank">
-                                    <a href="<?=base_url().$sales_order[0]->client_quotation_file?>"><?=$sales_order[0]->client_quotation_file?></a>
-                                    <?php if($sales_order[0]->client_quotation_file!="") { ?>
-                                    <a href="<?=base_url()?>sales_order/view/delete_client_quotation/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a>
-                                    <?php } ?>
-                            </div>
-                            <div class="form-group">
-                                    <label>Assign Procurement </label><br/>
-                                    <select name="procurement">
-                                        <option></option>
-                                        <?php 
-                                        if(!empty($procurement))
-                                        {
-                                            foreach($procurement as $each)
-                                            {
-                                                echo '<option value="'.$each->id.'" '.($sales_order[0]->procurement==$each->id ? ' selected="selected" ' : '').'>'.$each->username.'</option>';
-                                            }
-                                        }
+                                    <input type="file" name="quotation_file[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("so_id = "=>$sales_order[0]->so_id,"type = "=>"quotation_file"))->get("fx_sales_order_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
                                     ?>
-                                        </select>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>sales_order/view/delete_quotation/<?=$result->f_id?>/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
                             </div>
                             <div class="form-group">
                                     <label>Supplier </label><br/>
@@ -224,6 +228,36 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
                                             foreach($supplier as $each)
                                             {
                                                 echo '<option value="'.$each->supplier_id.'" '.($sales_order[0]->supplier_id==$each->supplier_id ? ' selected="selected" ' : '').'>'.$each->supplier_name.'</option>';
+                                            }
+                                        }
+                                    ?>
+                                        </select>
+                            </div>
+                            <div class="form-group">
+                                    <label>Upload Client PO</label><br/>
+                                    <input type="hidden" name="so_id" value="<?=$sales_order[0]->so_id?>">
+                                    <input type="file" name="client_quotation_file[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("so_id = "=>$sales_order[0]->so_id,"type = "=>"client_quotation_file"))->get("fx_sales_order_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>sales_order/view/delete_quotation/<?=$result->f_id?>/<?=$sales_order[0]->so_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Assign Procurement </label><br/>
+                                    <select name="procurement">
+                                        <option></option>
+                                        <?php 
+                                        if(!empty($procurement))
+                                        {
+                                            foreach($procurement as $each)
+                                            {
+                                                echo '<option value="'.$each->id.'" '.($sales_order[0]->procurement==$each->id ? ' selected="selected" ' : '').'>'.$each->username.'</option>';
                                             }
                                         }
                                     ?>
@@ -247,6 +281,7 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
                             </div>
                             <div class="form-group">
                     <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit quotation</button>
+                        <a href="<?=base_url()?>sales_order/view/reject_sales_order/<?=$sales_order[0]->so_id?>" class="btn btn-danger" title="Reject" data-toggle="ajaxModal" ><i class="fa fa-ban"></i>Reject</a>
                             </div>
 
                </form>

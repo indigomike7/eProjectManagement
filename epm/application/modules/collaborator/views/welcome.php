@@ -45,7 +45,7 @@
 				</div> </section>
 				<div class="row
                                      <?php 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'sales_admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' )
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' )
                 {
                                          ?>
 					<div class="col-md-8">
@@ -134,22 +134,60 @@
 							<table class="table table-striped m-b-none text-sm">
 								<thead>
 									<tr>
-                                                                            <th class="col-md-6">Sales Order Name </th>
+                        <th>Sales Order No </th>
+                        <th>Total Cost</th>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                        <th>Sales Leader Name</th>
+                        <th>Sales Leader ID</th>
+                        <th>Status</th>
+<?php } ?>
+                        <th>Sales Order date</th>
 									</tr> </thead>
 									<tbody>
 										<?php
-										if (!empty($projects)) {
-										foreach ($projects as $key => $project) { ?>
+										if (!empty($sales_order)) {
+                                                                                    $i=1;
+										foreach ($sales_order as $key => $each) { if($i<11){?>
 										<tr>
-											<?php
-											if ($project->auto_progress == 'FALSE') {
-											$progress = $project->progress;
-											}else{
-											$progress = round((($project->time_logged/3600)/$project->estimate_hours)*100,2);
-											} ?>
-                                                                                    <td><a href="<?=base_url()?>projects/view/<?=$project->project_id?>"><?=$project->project_title?></a></td>
+                                                                                    <td><?php echo '<a href="'.  base_url().'sales_order/view/item_details/'.$each->so_id.'">'.$each->so_number.'</a>';?></td>
+                                                                <td>
+                                                                    <?php
+                                                                        $total=0;
+                                                                                        $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
+                                                                      $array = array(
+                                                                              'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
+
+
+                                                                    if(!empty($sales_order_item))
+                                                                    {
+                                                                        foreach($sales_order_item as $each2)
+                                                                        {
+                                                                            if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
+                                                                                  $total=$total+$each2->total_cost;
+                                                                            else
+                                                                                  $total=$total+$each2->total_cost_2;
+
+                                                                        }
+
+                                                                    }
+                                                                    echo $total;
+                                                                ?>
+                                                                </td>
+                                          <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                                                                  <td><?=$each->so_created_by?></td>
+                                                                  <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
+                                          //                echo print_r($users);
+                                                          $staff_id=$users[0]->staff_id; echo $staff_id;
+                                          ?></td>
+                                          <td>
+                                                                  <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : "")  ?></a></td>
+                                          <?php } ?>
+                                                                  <td>
+
+
+                                                                  <?=$each->so_date?></td>
 										</tr>
-										<?php }
+                                                                                <?php } $i++;}
 										}else{ ?>
 										<tr>
 											<td><?=lang('nothing_to_display')?></td><td></td><td></td>
@@ -163,13 +201,13 @@
 							<div class="row text-center no-gutter">
 								<div class="col-xs-3 b-r b-light">
 									<span class="h4 font-bold m-t block">
-									<?=$this->user_profile->count_rows('bugs',array('reporter'=>$user_id))?>
-									</span> <small class="text-muted m-b block"><?=lang('reported_bugs')?></small>
+									<?=$waiting_approval[0]->waiting_approval?>
+									</span> <small class="text-muted m-b block">Waiting Approved</small>
 								</div>
 								<div class="col-xs-3 b-r b-light">
 									<span class="h4 font-bold m-t block">
-									<?=$this->user_profile->count_rows('projects',array('progress >='=>'100','assign_to'=>$user_id))?>
-									</span> <small class="text-muted m-b block"><?=lang('complete_projects')?></small>
+									<?=$approved[0]->approved?>
+									</span> <small class="text-muted m-b block">Completed Approved</small>
 								</div>
 								<div class="col-xs-3 b-r b-light">
 									<span class="h4 font-bold m-t block">

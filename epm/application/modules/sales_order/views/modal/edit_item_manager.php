@@ -3,7 +3,7 @@
 						<?php
 						echo form_open(base_url().'sales_order/view/details_item_manager/'.$soi_id.'/'.$so_id); ?>
 		<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal">&times;</button> <h4 class="modal-title">Create Sales Order Item</h4>
+		<button type="button" class="close" data-dismiss="modal">&times;</button> <h4 class="modal-title">Update Sales Order Item</h4>
                 <input type="hidden" name="so_id" value="<?php echo $so_id;?>">
                 <input type="hidden" name="soi_id" value="<?php echo $soi_id;?>">
 		</div>
@@ -34,25 +34,25 @@
                 <div class="form-group">
                     <label class="col-lg-9">Unit Cost<span class="text-danger">*</span></label>
                     <div class="col-lg-9">
-                    <input type="text" name="unit_cost" class="form-control" value="<?=$sales_order_items[0]->unit_cost_2?>" required/>
+                    <input type="text" name="unit_cost_2" class="form-control" value="<?=$sales_order_items[0]->unit_cost_2?>" required/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-9">Sub Cost<span class="text-danger">*</span></label>
                     <div class="col-lg-9">
-                    <input type="text" name="sub_cost" class="form-control" value="<?=$sales_order_items[0]->sub_cost_2?>" required/>
+                    <input type="text" name="sub_cost_2" class="form-control" value="<?=$sales_order_items[0]->sub_cost_2?>" required/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-9">Cost<span class="text-danger">*</span></label>
                     <div class="col-lg-9">
-                    <input type="text" name="cost" class="form-control" value="<?=$sales_order_items[0]->cost_2?>" required/>
+                    <input type="text" name="cost_2" class="form-control" value="<?=$sales_order_items[0]->cost_2?>" required/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-lg-9">Total Cost<span class="text-danger">*</span></label>
                     <div class="col-lg-9">
-                    <input type="text" name="total_cost" class="form-control" value="<?=$sales_order_items[0]->total_cost_2?>" required/>
+                    <input type="text" name="total_cost_2" class="form-control" value="<?=$sales_order_items[0]->total_cost_2?>" required/>
                     </div>
                 </div>
 

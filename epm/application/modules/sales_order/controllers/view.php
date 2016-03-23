@@ -12,7 +12,7 @@ class View extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->library(array('tank_auth','form_validation'));
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader'   && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager')
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_leader'   && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_procurement' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_finance')
                 {
 			$this->session->set_flashdata('message', lang('access_denied'));
 			redirect('');
@@ -110,19 +110,21 @@ class View extends MX_Controller {
                     $this->input->post('price');
                 }else{
                     $id = $this->input->post('so_id');
-                    if(file_exists($_FILES['client_quotation_file']['tmp_name']) || is_uploaded_file($_FILES['client_quotation_file']['tmp_name'])) {
-                        echo "test";
+                    for($i=0;$i<count($_FILES['client_quotation_file']['name']);$i++)
+                    {
+                    if(file_exists($_FILES['client_quotation_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['client_quotation_file']['tmp_name'][$i])) {
+//                        echo "test";
                 $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
                 //echo $config['upload_path'];
                 if(!file_exists($config['upload_path']))
                     mkdir($config['upload_path'], 0777, true);
                 $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png|gif|xls|xlsx';
-                $config['file_name'] = $_FILES['client_quotation_file']['name'];
+                $config['file_name'] = $_FILES['client_quotation_file']['name'][$i];
                 $config['overwrite'] = TRUE;
-                echo print_r($config);
+                //echo print_r($config);
                 $this->load->library('upload', $config);
 
-                if ( ! @move_uploaded_file($_FILES['client_quotation_file']['tmp_name'], $config['upload_path'].'/'.$config['file_name']))
+                if ( ! @move_uploaded_file($_FILES['client_quotation_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
                                 {
                                         $this->session->set_flashdata('response_status', 'error');
                                         $this->session->set_flashdata('message',"Error Upload Client Quotation File");
@@ -134,25 +136,27 @@ class View extends MX_Controller {
 //										$file_name = $this->profile_model->update_avatar($data['file_name']);
 
                                 }
-                        $quotation_file=array("client_quotation_file"=>$data2['file_name']);
-                $this->db->where('so_id',$so_id)->update("fx_sales_order",$quotation_file);
+                        $client_quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"client_quotation_file");
+                $this->db->insert("fx_sales_order_files",$client_quotation_file);
                         }
+                    }
 
 
-                
-                    if(file_exists($_FILES['quotation_file']['tmp_name']) || is_uploaded_file($_FILES['quotation_file']['tmp_name'])) {
+                for($i=0;$i<count($_FILES['quotation_file']['name']);$i++)
+                {
+                    if(file_exists($_FILES['quotation_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['quotation_file']['tmp_name'][$i])) {
 
                 $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
                 //echo $config['upload_path'];
                 if(!file_exists($config['upload_path']))
                     mkdir($config['upload_path'], 0777, true);
                 $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png';
-                $config['file_name'] = $_FILES['quotation_file']['name'];
+                $config['file_name'] = $_FILES['quotation_file']['name'][$i];
                 $config['overwrite'] = TRUE;
 
                 $this->load->library('upload', $config);
 
-                if (! @move_uploaded_file($_FILES['quotation_file']['tmp_name'], $config['upload_path'].'/'.$config['file_name']))
+                if (! @move_uploaded_file($_FILES['quotation_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
                                 {
                                         $this->session->set_flashdata('response_status', 'error');
                                         $this->session->set_flashdata('message',"Error Upload Quotation File");
@@ -164,17 +168,17 @@ class View extends MX_Controller {
 //										$file_name = $this->profile_model->update_avatar($data['file_name']);
 
                                 }
-                        $quotation_file=array("quotation_file"=>$data2['file_name']);
-              $this->db->where('so_id',$so_id)->update("fx_sales_order",$quotation_file);
+                        $quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"quotation_file");
+              $this->db->insert("fx_sales_order_files",$quotation_file);
                         }
-
+                }
 
                                 
                     $procurement=array(
                         "procurement"=>$this->input->post("procurement"),
                         "supplier_id"=>$this->input->post("supplier")
                     );
-                    echo print_r($procurement);
+                  //  echo print_r($procurement);
                     $this->db->where("so_id",$id)->update("fx_sales_order",$procurement);
                     //redirect(base_url()."sales_order/view/item_details/".$id);
                 }
@@ -229,7 +233,8 @@ class View extends MX_Controller {
                     $this->input->post('sales_order');
                 }else{
                     $id = $this->input->post('so_id');
-                    
+                    $data=array("status"=>'1');
+                    $this->db->where("so_id",$id)->update("fx_sales_order",$data);
                     $this->load->helper("pdf_helper");
                     tcpdf();
                 $data["sales_order"]=$this->AppModel->get_all_records($table = 'fx_sales_order',
@@ -341,6 +346,31 @@ class View extends MX_Controller {
             }
 
         }
+        function reject_sales_order()
+        {
+            $data['so_id']= $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order');
+                }else{
+                    $id = $this->input->post('so_id');
+                    $data=array("status"=>'2');
+                    $this->db->where("so_id",$id)->update("fx_sales_order",$data);
+                    redirect(base_url()."sales_order");
+                }
+            }
+            else
+            {
+                $this->load->view('modal/reject_sales_order',$data);
+            }
+
+        }
 	function delete()
 	{
             $data['so_id'] = $this->uri->segment(4);
@@ -414,7 +444,8 @@ class View extends MX_Controller {
 	}
 	function delete_quotation()
 	{
-            $data['so_id'] = $this->uri->segment(4);
+            $data['f_id'] = $this->uri->segment(4);
+            $data['so_id'] = $this->uri->segment(5);
             if ($this->input->post()) 
             {
 
@@ -425,9 +456,9 @@ class View extends MX_Controller {
                     $this->session->set_flashdata('message', lang('delete_failed'));
                     $this->input->post('sales_order_item_id');
                 }else{
+                        $f_id = $this->input->post('f_id');
                         $so_id = $this->input->post('so_id');
-                        $data=array("quotation_file"=>"");
-                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        $this->db->where(array("f_id"=>$f_id))->delete("fx_sales_order_files");
                         redirect(base_url()."sales_order/view/item_details/".$so_id);
                 }
             }
@@ -636,10 +667,10 @@ class View extends MX_Controller {
 			// check form validation
 /*                        $this->form_validation->set_rules('description', 'Description', 'required');
                         $this->form_validation->set_rules('quantity', 'Quantity', 'required');*/
-                        $this->form_validation->set_rules('unit_cost', 'Unit Cost', 'required');
-                        $this->form_validation->set_rules('sub_cost', 'Sub Cost', 'required');
-                        $this->form_validation->set_rules('cost', 'Cost', 'required');
-                        $this->form_validation->set_rules('total_cost', 'Total Cost', 'required');
+                        $this->form_validation->set_rules('unit_cost_2', 'Unit Cost', 'required');
+                        $this->form_validation->set_rules('sub_cost_2', 'Sub Cost', 'required');
+                        $this->form_validation->set_rules('cost_2', 'Cost', 'required');
+                        $this->form_validation->set_rules('total_cost_2', 'Total Cost', 'required');
 			$this->form_validation->run();
 
 
@@ -649,11 +680,11 @@ class View extends MX_Controller {
                         'soi_so_id' => $this->input->post('so_id') /*,
                         'description' =>  $this->form_validation->set_value('description'),
                         'quantity' => $this->form_validation->set_value('quantity')*/,
-                        'unit_cost_2' => $this->form_validation->set_value('unit_cost') ,
+                        'unit_cost_2' => $this->form_validation->set_value('unit_cost_2') ,
                         /*'currency_2' => $this->input->post('currency'),*/
-                        'sub_cost_2' => $this->form_validation->set_value('sub_cost'),
-                        'cost_2' => $this->form_validation->set_value('cost'),
-                        'total_cost_2' => $this->input->post('total_cost')
+                        'sub_cost_2' => $this->form_validation->set_value('sub_cost_2'),
+                        'cost_2' => $this->form_validation->set_value('cost_2'),
+                        'total_cost_2' => $this->input->post('total_cost_2')
                      );
 
                     $this->db->where('soi_id',$this->input->post('soi_id'))->update('fx_sales_order_items', $data); 
@@ -661,6 +692,47 @@ class View extends MX_Controller {
 			}
 		}
             $this->load->view('modal/edit_item_manager',$data);
+	}
+	function details_item_procurement()
+	{
+            $data['role'] = Applib::login_info($this->session->userdata('user_id'))->role_id;
+            $data['currencies'] = $this -> applib -> currencies();
+            $data['soi_id'] = $this->uri->segment(4);
+            $data['so_id'] = $this->uri->segment(5);
+            $data['sales_order_items'] = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
+            $array = array(
+                    'fx_sales_order_items.soi_id =' => $data['soi_id']),$join_table = 'fx_sales_order',$join_criteria = 'fx_sales_order.so_id=fx_sales_order_items.soi_so_id','fx_sales_order.so_id');
+            //echo $this->uri->segment(4)."xxx";
+		if ($this->input->post()) {
+
+			// check form validation
+/*                        $this->form_validation->set_rules('description', 'Description', 'required');
+                        $this->form_validation->set_rules('quantity', 'Quantity', 'required');*/
+                        $this->form_validation->set_rules('unit_cost_p', 'Unit Cost', 'required');
+                        $this->form_validation->set_rules('sub_cost_p', 'Sub Cost', 'required');
+                        $this->form_validation->set_rules('cost_p', 'Cost', 'required');
+                        $this->form_validation->set_rules('total_cost_p', 'Total Cost', 'required');
+			$this->form_validation->run();
+
+
+			if ($this->form_validation->run()) {		// validation ok
+                $date = date_format(date_create_from_format(config_item('date_php_format'), $this->form_validation->set_value('so_date')), 'Y-m-d');
+                            $data = array(
+                        'soi_so_id' => $this->input->post('so_id') /*,
+                        'description' =>  $this->form_validation->set_value('description'),
+                        'quantity' => $this->form_validation->set_value('quantity')*/,
+                        'unit_cost_p' => $this->form_validation->set_value('unit_cost_p') ,
+                        /*'currency_2' => $this->input->post('currency'),*/
+                        'sub_cost_p' => $this->form_validation->set_value('sub_cost_p'),
+                        'cost_p' => $this->form_validation->set_value('cost_p'),
+                        'total_cost_p' => $this->input->post('total_cost_p')
+                     );
+
+                    $this->db->where('soi_id',$this->input->post('soi_id'))->update('fx_sales_order_items', $data); 
+				redirect(base_url()."sales_order/view/item_details/".$this->uri->segment(5));
+			}
+		}
+            $this->load->view('modal/edit_item_procurement',$data);
 	}
 	function create()
 	{

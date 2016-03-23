@@ -37,7 +37,7 @@
                 <span><?=lang('clients')?></span> </a> </li>
            <?php } ?>
                 
-           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ){ ?>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ||  $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement'  ||  $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance'  ){ ?>
 
               <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
                 <a href="<?=base_url()?>sales_order"> <i class="fa fa-shopping-cart icon">
@@ -53,6 +53,10 @@
            <?php } ?>
            <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  ){ ?>
 
+              <li class="<?php if($page == 'approved'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order/approved"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Approved Sales Order</span> </a> </li>
               <li class="<?php if($page == 'supplier'){echo  "active"; }?>">
                 <a href="<?=base_url()?>supplier"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
