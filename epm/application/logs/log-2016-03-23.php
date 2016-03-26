@@ -23,3 +23,7 @@ ERROR - 2016-03-23 08:50:22 --> Query error: You have an error in your SQL synta
 ORDER BY `so_id` desc' at line 3
 ERROR - 2016-03-23 09:32:56 --> Severity: Warning  --> date_format() expects parameter 1 to be DateTimeInterface, boolean given D:\xampp_erp\htdocs\pm\epm\application\modules\sales_order\controllers\view.php 719
 ERROR - 2016-03-23 10:43:58 --> Severity: Notice  --> Undefined index: invoice_file D:\xampp_erp\htdocs\pm\epm\application\modules\procurement\controllers\view.php 88
+ERROR - 2016-03-23 23:45:20 --> Severity: Notice  --> Trying to get property of non-object D:\xampp_erp\htdocs\pm\epm\application\libraries\Tank_auth.php 169
+ERROR - 2016-03-23 23:45:20 --> Severity: Notice  --> Trying to get property of non-object D:\xampp_erp\htdocs\pm\epm\application\libraries\Tank_auth.php 169
+ERROR - 2016-03-23 23:45:20 --> Severity: Notice  --> Trying to get property of non-object D:\xampp_erp\htdocs\pm\epm\application\libraries\Tank_auth.php 169
+ERROR - 2016-03-23 23:57:00 --> 404 Page Not Found --> errors/error_404

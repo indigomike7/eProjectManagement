@@ -91,6 +91,113 @@ class Sales_order extends MX_Controller {
 				->set_layout('users')
 				->build('approved',isset($data) ? $data : NULL);
 	}
+	function report()
+	{
+            $this->load->module('layouts');
+            $this->load->library('template');
+            $this->template->title('Sales Order Report');
+            $data['page'] = "view_item_sales_order.php";
+            $data['datatables'] = TRUE;
+            $data['form'] = TRUE;
+            $data['datepicker'] = TRUE;
+            $data['currencies'] = $this -> applib -> currencies();
+            $data['languages'] = $this -> applib -> languages();
+                    $this->load->helper("pdf_helper");
+                    tcpdf();
+                
+		if($this->input->post())
+                {
+                    if($this->input->post("so_created_by")== "" && $this->input->post("status")=="")
+                    {
+                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                    }
+                    elseif($this->input->post("so_created_by")!= "" && $this->input->post("status")=="")
+                    {
+                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'so_created_by = ' => $this->input->post("so_created_by"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                    }
+                    elseif($this->input->post("so_created_by")== "" && $this->input->post("status")!="")
+                    {
+                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => $this->input->post("status"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                    }
+                    else
+                    {
+                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => $this->input->post("status"),'so_created_by = ' => $this->input->post("so_created_by"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                    }
+                    
+                    $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+                    $content="";
+                    $obj_pdf->SetCreator(PDF_CREATOR);
+                    $title = "PDF Report";
+                    $obj_pdf->SetTitle($title);
+                    $obj_pdf->SetHeaderData("logo.png", PDF_HEADER_LOGO_WIDTH, "  Micro Technology Solution Sdn. Bhd. (619071-T)(GST No. 001829666816) ", "Lake Field,  No.1 - 2 (2nd Floor), Jalan Tasik Utama 4, \n Medan Niaga Tasik Damai, Sungai Besi, 57000 Kuala Lumpur. \n  Tel : 603-9054 2270            Fax: 603-9054 2261          Email: ssc@mtsm.com.my");
+                    $obj_pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+                    $obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+                    $obj_pdf->SetDefaultMonospacedFont('helvetica');
+                    $obj_pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+                    $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+                    $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+                    $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+                    $obj_pdf->SetFont('helvetica', '', 9);
+                    $obj_pdf->setFontSubsetting(false);
+                    $obj_pdf->AddPage();
+                    ob_start();
+                        // we can have any view part here like HTML, PHP etc
+                        $content = "<html><body>";
+                        $content.="<table width=\"100%\" border=\"1\"><thead><tr><th width=\"25%\">SO Number</th><th width=\"25%\">So Date</th><th width=\"25%\">Sales Leader</th><th width=\"25%\">TOTAL (RM)</th></tr></thead>";
+                        /*START TBODY*/
+                        $content.="<tbody>";
+                        $i=1;
+                        $total=0;
+                        foreach($sales_order as $each)
+                        {
+                              $total=0;
+                                              $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
+                            $array = array(
+                                    'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
+                    
+
+                          if(!empty($sales_order_item))
+                          {
+                              foreach($sales_order_item as $each2)
+                              {
+                                  if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
+                                        $total=$total+$each2->total_cost;
+                                  else
+                                        $total=$total+$each2->total_cost_2;
+                                      
+                              }
+                              
+                          }
+                            /*LOOP*/
+                            $content.="<tr><td width=\"25%\">".$each->so_number."</td><td width=\"25%\">".$each->so_date."</td><td width=\"25%\">".$each->so_created_by."</td><td width=\"25%\">".$total."</td></tr>";
+                        }
+                        
+                        $content.="</table>";
+                        $content.="</body></html>";
+//                    ob_end_clean();
+                    $obj_pdf->writeHTML($content, true, false, true, false, '');
+                    $obj_pdf->Output('output.pdf', 'I');
+
+                }
+                else
+                {
+                        $data['so_created_by'] = $this->AppModel->get_all_records($table = 'fx_users',
+                            $array = array(
+                                    'role_id = ' => '12'),$join_table = '',$join_criteria = '','fx_users.id');
+                    
+                                $this->template
+				->set_layout('users')
+				->build('report',isset($data) ? $data : NULL);
+                }
+	}
         function get_client_contact()
         {
             $data=array();

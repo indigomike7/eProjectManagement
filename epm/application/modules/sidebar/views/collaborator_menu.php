@@ -44,6 +44,17 @@
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Sales Order</span> </a> </li>
            <?php } ?>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager'  ){ ?>
+
+              <li class="<?php if($page == 'approved'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order/approved"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Approved Sales Order</span> </a> </li>
+              <li class="<?php if($page == 'sales_order_report'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order/report"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Sales Order Report</span> </a> </li>
+           <?php } ?>
            <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance'  ){ ?>
 
               <li class="<?php if($page == 'procurement'){echo  "active"; }?>">
