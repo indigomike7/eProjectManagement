@@ -5,9 +5,10 @@
 <section id="content">
 	<section class="vbox">
 		<section class="scrollable padder">
-	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Order Item</header>
+	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Order Detail</header>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab-client-general">
+			<?php if($error!="") { echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'.$error."</div>";  }?>
                             <div class="form-group">
                                     <label>Order Number <span class="text-danger">*</span></label><br/>
                                     <?=$procurement[0]->p_number?>
@@ -21,75 +22,15 @@
                                     <?=$procurement[0]->supplier_name?>
                             </div>
                         </div>
-                        <p align="right">
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' ) { ?> 
-    <a href="<?=base_url()?>procurement/view/create_item/<?=$procurement_id?>" class="btn btn-<?=config_item('theme_color');?> btn-sm pull-right" title="New Items" data-placement="bottom"  data-toggle="ajaxModal" ><i class="fa fa-plus"></i> New Items</a>
-<?php } ?>
-                        </p>
-               <div class="table-responsive">
-                  <table id="table-clients" class="table table-striped m-b-none AppendDataTables">
-                    <thead>
-                      <tr>
-                        
-                        <th>Order Number </th>
-                        <th>Qty</th>
-                        <th>Unit Cost</th>
-                        <th>Sub Cost</th>
-                        <th>Total Cost</th>
-                        <th class="col-options no-sort"></th>
-                      </tr> </thead> <tbody>
-                      <?php
-                      if (!empty($procurement_items)) {
-                      foreach ($procurement_items as $each) { 
-//                        $client_due = Applib::client_due($each->co_id);
-                        ?>
-                      <tr>
-                        <td>
-                        <i class="fa fa-circle-o "></i>
-
-                        <?=$each->description?></td>
-                      <td>
-                        <?=$each->quantity?></td>
-                      <td>
-                        <?=$each->unit_cost?></td>
-                      <td>
-                        <?=$each->sub_cost?></td>
-                      <td>
-                        <?=$each->total_cost?></td>
-                      <td>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' ) { ?> 
-                        <a href="<?=base_url()?>procurement/view/details_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal"  title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
-                        <a href="<?=base_url()?>procurement/view/delete_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('delete')?>"><i class="fa fa-trash-o"></i></a>
-<?php } ?>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' ) { ?> 
-<?php if ($each->status=="1" ) { ?> 
-                        <a href="<?=base_url()?>procurement/view/reject_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Reject" data-toggle="ajaxModal"   onclick=""><i class="fa fa-ban"></i></a>
-<?php } ?>
-<?php if ($each->status=="2" ) { ?> 
-                        <a href="<?=base_url()?>procurement/view/approve_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Approve" data-toggle="ajaxModal"   onclick=""><i class="fa fa-check-square"></i></a>
-<?php } ?>
-<?php if ($each->status=="0" ) { ?> 
-                        <a href="<?=base_url()?>procurement/view/reject_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Reject" data-toggle="ajaxModal"   onclick=""><i class="fa fa-ban"></i></a>
-                        <a href="<?=base_url()?>procurement/view/approve_item/<?=$each->item_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Approve" data-toggle="ajaxModal"   onclick=""><i class="fa fa-check-square"></i></a>
-<?php } ?>
-<?php } ?>
-                        
-                      </td>
-                    </tr>
-                    <?php } } ?>
-                    
-                    
-                  </tbody>
-                </table>
                 <?php
-if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' ) {  
+if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales') {  
 			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
                             <div class="form-group">
-                                    <label>Upload PO File <span class="text-danger">*</span></label><br/>
+                                    <label>Upload Sales Costing <span class="text-danger">*</span></label><br/>
                                     <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
-                                    <input type="file" name="po_file[]"  class="form-control" multiple>
+                                    <input type="file" name="sales_costing[]"  class="form-control" multiple>
                                     <?php
-                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"po_file"))->get("fx_procurement_files")->result();
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"sales_costing"))->get("fx_procurement_files")->result();
                                     foreach($data as $key=>$result)
                                     {
                                     ?>
@@ -98,32 +39,102 @@ if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $
                                     <?php
                                     }
                                     ?>
+                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Upload</button>
                             </div>
+               </form>
+<?php			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
                             <div class="form-group">
+                                    <label>Upload Client's Purchase Order <span class="text-danger">*</span></label><br/>
+                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
+                                    <input type="file" name="client_po[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"client_po"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>procurement/view/delete_quotation/<?=$result->f_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
+                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Upload</button>
+                            </div>
+               </form>
+<?php			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
+                            <div class="form-group">
+                                    <label>Upload Client's Confirmation Order <span class="text-danger">*</span></label><br/>
+                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
+                                    <input type="file" name="client_co[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"client_co"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>procurement/view/delete_quotation/<?=$result->f_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
+                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Upload</button>
+                            </div>
+               </form>
+<?php			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
+                            <div class="form-group">
+                                    <label>Upload Supplier's Quotation <span class="text-danger">*</span></label><br/>
+                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
+                                    <input type="file" name="supplier_quotation[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"supplier_quotation"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>procurement/view/delete_quotation/<?=$result->f_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
+                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Upload</button>
+                            </div>
+               </form>
+<?php }
+if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) {  
+
+echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
+                            <div class="form-group">
+                                    <label>Upload  Supplier's PO<span class="text-danger">*</span></label><br/>
+                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
+                                    <input type="file" name="supplier_po[]"  class="form-control" multiple>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"supplier_po"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <a href="<?=base_url()?>procurement/view/delete_quotation/<?=$result->f_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
+                                    <?php
+                                    }
+                                    ?>
+                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Upload</button>
+                            </div>
+               </form>
+<?php }
+if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales') {  
+echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
+                            <div class="form-group">
+                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
+                            <input type='hidden' name='action' value='submit_to_finance'>
+                                    <input type="checkbox" name="bypass" value="yes">Disable to function required to upload sale costing and client PO<br/>
+                                    <input type="checkbox" name="bypass2" value="yes">Bypass Finance Approval and send to supplier<br/>
                     <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit</button>
                             </div>
                </form>
 <?php } ?>
-                <?php
-if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' ) {  
+<?php
+if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance' ) {  
 			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>
                             <div class="form-group">
-                                    <label>Upload Invoice File <span class="text-danger">*</span></label><br/>
-                                    <input type="hidden" name="procurement_id" value="<?=$procurement[0]->procurement_id?>">
-                                    <input type="file" name="invoice_file[]"  class="form-control" multiple>
-                                    <?php
-                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"invoice_file"))->get("fx_procurement_files")->result();
-                                    foreach($data as $key=>$result)
-                                    {
-                                    ?>
-                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
-                                    <a href="<?=base_url()?>procurement/view/delete_quotation/<?=$result->f_id?>/<?=$procurement[0]->procurement_id?>" class="btn btn-default btn-xs" title="Delete File" data-toggle="ajaxModal"   onclick=""><i class="fa fa-trash-o"></i></a><br/>
-                                    <?php
-                                    }
-                                    ?>
-                            </div>
-                            <div class="form-group">
-                    <button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit</button>
+                        <a href="<?=base_url()?>procurement/view/approve_order/<?=$procurement[0]->procurement_id?>" class="btn btn-default" title="Approve" data-toggle="ajaxModal"   onclick=""><i class="fa fa-check-square"></i>&nbsp;&nbsp; Approve</a>
+                        <a href="<?=base_url()?>procurement/view/reject_order/<?=$procurement[0]->procurement_id?>" class="btn btn-danger" title="Reject" data-toggle="ajaxModal"   onclick=""><i class="fa fa-ban"></i>&nbsp;&nbsp; Reject</a>
                             </div>
                </form>
 <?php } ?>

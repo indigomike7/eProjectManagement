@@ -45,7 +45,7 @@
 				</div> </section>
 				<div class="row
                                      <?php 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'e_sales_manager' )
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'sales_manager'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement' )
                 {
                                          ?>
 					<div class="col-md-8">
@@ -135,10 +135,8 @@
 								<thead>
 									<tr>
                         <th>Sales Order No </th>
-                        <th>Total Cost</th>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
-                        <th>Sales Leader Name</th>
-                        <th>Sales Leader ID</th>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'sales_manager' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
+                        <th>Created By</th>
                         <th>Status</th>
 <?php } ?>
                         <th>Sales Order date</th>
@@ -150,29 +148,6 @@
 										foreach ($sales_order as $key => $each) { if($i<11){?>
 										<tr>
                                                                                     <td><?php echo '<a href="'.  base_url().'sales_order/view/item_details/'.$each->so_id.'">'.$each->so_number.'</a>';?></td>
-                                                                <td>
-                                                                    <?php
-                                                                        $total=0;
-                                                                                        $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
-                                                                      $array = array(
-                                                                              'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
-
-
-                                                                    if(!empty($sales_order_item))
-                                                                    {
-                                                                        foreach($sales_order_item as $each2)
-                                                                        {
-                                                                            if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
-                                                                                  $total=$total+$each2->total_cost;
-                                                                            else
-                                                                                  $total=$total+$each2->total_cost_2;
-
-                                                                        }
-
-                                                                    }
-                                                                    echo $total;
-                                                                ?>
-                                                                </td>
                                           <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                                                                   <td><?=$each->so_created_by?></td>
                                                                   <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
@@ -190,7 +165,7 @@
                                                                                 <?php } $i++;}
 										}else{ ?>
 										<tr>
-											<td><?=lang('nothing_to_display')?></td><td></td><td></td>
+											<td><?=lang('nothing_to_display')?></td><td></td>
 										</tr>
 										<?php } ?>
 										
