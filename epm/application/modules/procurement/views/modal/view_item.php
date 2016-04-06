@@ -5,7 +5,7 @@
 <section id="content">
 	<section class="vbox">
 		<section class="scrollable padder">
-	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Order Detail</header>
+	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Supplier Order Detail</header>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab-client-general">
 			<?php if($error!="") { echo '<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert">&times;</button>'.$error."</div>";  }?>
@@ -22,6 +22,71 @@
                                     <?=$procurement[0]->supplier_name?>
                             </div>
                         </div>
+                <?php
+if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance') {  
+    ?>
+                            <div class="form-group">
+                                    <label>Sales Costing </label><br/>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"sales_costing"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Client's Purchase Order </label><br/>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"client_po"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Client's Confirmation Order </label><br/>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"client_co"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Supplier's Quotation </label><br/>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"supplier_quotation"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                            <div class="form-group">
+                                    <label>Supplier's Purchase Order </label><br/>
+                                    <?php
+                                    $data=$this->db->where(array("procurement_id = "=>$procurement[0]->procurement_id,"type = "=>"supplier_po"))->get("fx_procurement_files")->result();
+                                    foreach($data as $key=>$result)
+                                    {
+                                    ?>
+                                    <a href="<?=base_url().$result->files?>" target="_blank"><?=$result->files?></a>
+                                    <?php
+                                    }
+                                    ?>
+                            </div>
+                        
+<?php } ?>
                 <?php
 if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales') {  
 			echo '<form action="'.base_url().'procurement/view/item_details/'.$procurement[0]->procurement_id.'" method="post" enctype="multipart/form-data">'; ?>

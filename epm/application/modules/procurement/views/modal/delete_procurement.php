@@ -5,7 +5,7 @@
 		</div><?php
 			echo form_open(base_url().'procurement/view/delete'); ?>
 		<div class="modal-body">
-			<p>Are you sure to delete this Order?</p>
+			<p>Are you sure to delete this Supplier Order?</p>
 			
 			<input type="hidden" name="procurement_id" value="<?=$procurement_id?>">
 

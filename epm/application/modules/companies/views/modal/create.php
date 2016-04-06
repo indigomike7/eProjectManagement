@@ -89,12 +89,12 @@
                                         </select>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade in" id="tab-client-web">
                             <div class="form-group">
                                     <label><?=lang('website')?> </label>
                                     <input type="text" value="" name="company_website"  class="input-sm form-control">
                             </div>
+                        </div>
+                        <div class="tab-pane fade in" id="tab-client-web">
                             <div class="form-group">
                                     <label>Skype</label>
                                     <input type="text" value="" name="skype"  class="input-sm form-control">

@@ -26,7 +26,7 @@ class View extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Edit Sales Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "waiting_sales_order";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['datepicker'] = TRUE;
@@ -129,12 +129,13 @@ class View extends MX_Controller {
             $this->load->module('layouts');
             $this->load->library('template');
             $this->template->title('Sales Order Items');
-            $data['page'] = "view_item_sales_order.php";
+            $data['page'] = "waiting_sales_order";
             $data['datatables'] = TRUE;
             $data['form'] = TRUE;
             $data['datepicker'] = TRUE;
             $data['currencies'] = $this -> applib -> currencies();
             $data['languages'] = $this -> applib -> languages();
+            $data['error']="";
 		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
                 {
 //                    echo "test";
@@ -143,32 +144,41 @@ class View extends MX_Controller {
                      );
                     $this->db->where("so_id",$so_id)->update('fx_sales_order', $so_admin); 
                 }
-            if ($this->input->post("procurement")) 
+            if ($this->input->post()) 
             {
 
-                $this->form_validation->set_rules('so_id','Sales Order ID','required');
-                if ($this->form_validation->run() == FALSE)
-                {
-                    $this->session->set_flashdata('response_status', 'error');
-                    $this->session->set_flashdata('message', lang('delete_failed'));
-                    $this->input->post('price');
-                }else{
-                    $id = $this->input->post('so_id');
-                    for($i=0;$i<count($_FILES['client_quotation_file']['name']);$i++)
+                    if(!$this->input->post("bypass") && $this->input->post("action"))
                     {
-                    if(file_exists($_FILES['client_quotation_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['client_quotation_file']['tmp_name'][$i])) {
-//                        echo "test";
+                        $sales_order_files=$this->AppModel->get_all_records($table = 'fx_sales_order_files',
+                            $array = array(
+                                    'so_id =' => $so_id,"type = "=>"sales_costing"),$join_table = '',$join_criteria = '','so_id');
+                        $sales_order_files2=$this->AppModel->get_all_records($table = 'fx_sales_order_files',
+                            $array = array(
+                                    'so_id =' => $so_id,"type = "=>"client_po"),$join_table = '',$join_criteria = '','so_id');
+                        if(count($sales_order_files)<1 ||count($sales_order_files2)<1 )
+                        {
+                            $data["error"]="Please upload Sales Costing and Client Purchase Order";
+                        }
+                    }
+                            
+                    if($data["error"]=="")
+                    {
+                        $id=$this->input->post("so_id");
+                        if(isset($_FILES['sales_costing']))
+                        {
+                    for($i=0;$i<count($_FILES['sales_costing']['name']);$i++)
+                    {
+                    if(file_exists($_FILES['sales_costing']['tmp_name'][$i]) || is_uploaded_file($_FILES['sales_costing']['tmp_name'][$i])) {
                 $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
-                //echo $config['upload_path'];
                 if(!file_exists($config['upload_path']))
                     mkdir($config['upload_path'], 0777, true);
                 $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png|gif|xls|xlsx';
-                $config['file_name'] = $_FILES['client_quotation_file']['name'][$i];
+                $config['file_name'] = $_FILES['sales_costing']['name'][$i];
                 $config['overwrite'] = TRUE;
                 //echo print_r($config);
                 $this->load->library('upload', $config);
 
-                if ( ! @move_uploaded_file($_FILES['client_quotation_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                if ( ! @move_uploaded_file($_FILES['sales_costing']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
                                 {
                                         $this->session->set_flashdata('response_status', 'error');
                                         $this->session->set_flashdata('message',"Error Upload Client Quotation File");
@@ -180,27 +190,93 @@ class View extends MX_Controller {
 //										$file_name = $this->profile_model->update_avatar($data['file_name']);
 
                                 }
-                        $client_quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"client_quotation_file");
+                        $client_quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"sales_costing");
                 $this->db->insert("fx_sales_order_files",$client_quotation_file);
                         }
                     }
+                        }
 
+                        if(isset($_FILES['client_po']))
+                        {
+                    for($i=0;$i<count($_FILES['client_po']['name']);$i++)
+                    {
+                    if(file_exists($_FILES['client_po']['tmp_name'][$i]) || is_uploaded_file($_FILES['client_po']['tmp_name'][$i])) {
+                $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
+                if(!file_exists($config['upload_path']))
+                    mkdir($config['upload_path'], 0777, true);
+                $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png|gif|xls|xlsx';
+                $config['file_name'] = $_FILES['client_po']['name'][$i];
+                $config['overwrite'] = TRUE;
+                //echo print_r($config);
+                $this->load->library('upload', $config);
 
-                for($i=0;$i<count($_FILES['quotation_file']['name']);$i++)
+                if ( ! @move_uploaded_file($_FILES['client_po']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                                {
+                                        $this->session->set_flashdata('response_status', 'error');
+                                        $this->session->set_flashdata('message',"Error Upload Client Quotation File");
+//                                        redirect(base_url()."sales_order/view/item_details/".$so_id);
+                                }
+                                else
+                                {
+                                        $data2["file_name"] = $config['upload_path'].'/'.$config['file_name'];
+//										$file_name = $this->profile_model->update_avatar($data['file_name']);
+
+                                }
+                        $client_quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"client_po");
+                $this->db->insert("fx_sales_order_files",$client_quotation_file);
+                        }
+                    }
+                        }
+
+                        if(isset($_FILES['client_co']))
+                        {
+                    for($i=0;$i<count($_FILES['client_co']['name']);$i++)
+                    {
+                    if(file_exists($_FILES['client_co']['tmp_name'][$i]) || is_uploaded_file($_FILES['client_co']['tmp_name'][$i])) {
+                $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
+                if(!file_exists($config['upload_path']))
+                    mkdir($config['upload_path'], 0777, true);
+                $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png|gif|xls|xlsx';
+                $config['file_name'] = $_FILES['client_co']['name'][$i];
+                $config['overwrite'] = TRUE;
+                //echo print_r($config);
+                $this->load->library('upload', $config);
+
+                if ( ! @move_uploaded_file($_FILES['client_co']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                                {
+                                        $this->session->set_flashdata('response_status', 'error');
+                                        $this->session->set_flashdata('message',"Error Upload Client Quotation File");
+//                                        redirect(base_url()."sales_order/view/item_details/".$so_id);
+                                }
+                                else
+                                {
+                                        $data2["file_name"] = $config['upload_path'].'/'.$config['file_name'];
+//										$file_name = $this->profile_model->update_avatar($data['file_name']);
+
+                                }
+                        $client_quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"client_co");
+                $this->db->insert("fx_sales_order_files",$client_quotation_file);
+                        }
+                    }
+                        }
+
+                        if(isset($_FILES['supplier_quotation']))
+                        {
+                for($i=0;$i<count($_FILES['supplier_quotation']['name']);$i++)
                 {
-                    if(file_exists($_FILES['quotation_file']['tmp_name'][$i]) || is_uploaded_file($_FILES['quotation_file']['tmp_name'][$i])) {
+                    if(file_exists($_FILES['supplier_quotation']['tmp_name'][$i]) || is_uploaded_file($_FILES['supplier_quotation']['tmp_name'][$i])) {
 
                 $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
                 //echo $config['upload_path'];
                 if(!file_exists($config['upload_path']))
                     mkdir($config['upload_path'], 0777, true);
                 $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png';
-                $config['file_name'] = $_FILES['quotation_file']['name'][$i];
+                $config['file_name'] = $_FILES['supplier_quotation']['name'][$i];
                 $config['overwrite'] = TRUE;
 
                 $this->load->library('upload', $config);
 
-                if (! @move_uploaded_file($_FILES['quotation_file']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                if (! @move_uploaded_file($_FILES['supplier_quotation']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
                                 {
                                         $this->session->set_flashdata('response_status', 'error');
                                         $this->session->set_flashdata('message',"Error Upload Quotation File");
@@ -212,22 +288,51 @@ class View extends MX_Controller {
 //										$file_name = $this->profile_model->update_avatar($data['file_name']);
 
                                 }
-                        $quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"quotation_file");
+                        $quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"supplier_quotation");
               $this->db->insert("fx_sales_order_files",$quotation_file);
                         }
                 }
+            }
+                        if(isset($_FILES['supplier_po']))
+                        {
+                for($i=0;$i<count($_FILES['supplier_po']['name']);$i++)
+                {
+                    if(file_exists($_FILES['supplier_po']['tmp_name'][$i]) || is_uploaded_file($_FILES['supplier_po']['tmp_name'][$i])) {
 
-                                
-                    $procurement=array(
-                        "procurement"=>$this->input->post("procurement"),
-                        "supplier_id"=>$this->input->post("supplier")
-                    );
-                  //  echo print_r($procurement);
-                    $this->db->where("so_id",$id)->update("fx_sales_order",$procurement);
-                    //redirect(base_url()."sales_order/view/item_details/".$id);
+                $config['upload_path'] = 'user/'.$this->tank_auth->get_username();
+                //echo $config['upload_path'];
+                if(!file_exists($config['upload_path']))
+                    mkdir($config['upload_path'], 0777, true);
+                $config['allowed_types'] = 'pdf|doc|docx|zip|jpg|png';
+                $config['file_name'] = $_FILES['supplier_po']['name'][$i];
+                $config['overwrite'] = TRUE;
+
+                $this->load->library('upload', $config);
+
+                if (! @move_uploaded_file($_FILES['supplier_po']['tmp_name'][$i], $config['upload_path'].'/'.$config['file_name']))
+                                {
+                                        $this->session->set_flashdata('response_status', 'error');
+                                        $this->session->set_flashdata('message',"Error Upload Quotation File");
+  //                                      redirect(base_url()."sales_order");
+                                }
+                                else
+                                {
+                                        $data2['file_name'] = $config['upload_path'].'/'.$config['file_name'];
+//										$file_name = $this->profile_model->update_avatar($data['file_name']);
+
+                                }
+                        $quotation_file=array("files"=>$data2['file_name'],"so_id"=>$id,"type"=>"supplier_po");
+              $this->db->insert("fx_sales_order_files",$quotation_file);
+                        }
                 }
             }
-            
+                if($this->input->post("action"))
+                {
+                    /* SEND MAIL */
+                }
+
+                    }
+            }
                 $data["sales_order"]=$this->AppModel->get_all_records($table = 'fx_sales_order',
                     $array = array(
                             'so_id =' => $so_id),$join_table = '',$join_criteria = '','so_id');
@@ -593,6 +698,54 @@ class View extends MX_Controller {
             else
             {
                 $this->load->view('modal/reject_item',$data);
+            }
+	}
+	function pending_po()
+	{
+            $data['so_id'] = $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order_item_id');
+                }else{
+                        $so_id=$this->input->post('so_id');
+                        $data=array("status"=>"4");
+                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        redirect(base_url()."sales_order_new/sales_order");
+                }
+            }
+            else
+            {
+                $this->load->view('modal/pending_po',$data);
+            }
+	}
+	function received_po()
+	{
+            $data['so_id'] = $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order_item_id');
+                }else{
+                        $so_id=$this->input->post('so_id');
+                        $data=array("status"=>"5");
+                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        redirect(base_url()."sales_order_new/sales_order/");
+                }
+            }
+            else
+            {
+                $this->load->view('modal/received_po',$data);
             }
 	}
 	function edit_items()

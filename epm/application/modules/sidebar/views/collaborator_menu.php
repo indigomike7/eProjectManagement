@@ -45,7 +45,7 @@
                 <span>Sales Order</span> </a> </li>
            <?php } ?>
            <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager'){ ?>
-                <li class="">
+                <li class="<?php if($page == "waiting_sales_order" OR $page == "sent_sales_order" OR $page == "approved_sales_order" OR $page == "rejected_sales_order" OR $page == "received_sales_order" OR $page == "pending_sales_order"){echo  "active"; }?>">
                   <a href="#" >
                     <i class="fa fa-shopping-cart icon">
                     <b class="bg-<?=config_item('theme_color');?>"></b> </i>
@@ -54,70 +54,64 @@
                   <span>Sales Order </span> </a>
                   <ul class="nav lt">
 
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'waiting_sales_order'){echo  "active"; }?>">
                 <a href="<?=base_url()?>sales_order_new/sales_order"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Waiting for Approve Sales Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'approved_sales_order'){echo  "active"; }?>">
                 <a href="<?=base_url()?>sales_order_new/sales_order/approved"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Approved Sales Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'rejected_sales_order'){echo  "active"; }?>">
                 <a href="<?=base_url()?>sales_order_new/sales_order/rejected"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Rejected Sales Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'sent_sales_order'){echo  "active"; }?>">
                 <a href="<?=base_url()?>sales_order_new/sales_order/sent"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Sent Sales Order</span> </a> </li>
+              <li class="<?php if($page == 'pending_sales_order'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order_new/sales_order/pending_po"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Pending PO Sales Order</span> </a> </li>
+              <li class="<?php if($page == 'received_sales_order'){echo  "active"; }?>">
+                <a href="<?=base_url()?>sales_order_new/sales_order/received_po"> <i class="fa fa-shopping-cart icon">
+                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
+                <span>Received PO Sales Order</span> </a> </li>
                   </ul>
                 </li>
            <?php } ?>
-           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager'  ){ ?>
-                <li class="">
-                  <a href="#" >
-                    <i class="fa fa-shopping-cart icon">
-                    <b class="bg-<?=config_item('theme_color');?>"></b> </i>
-                    <span class="pull-right"> <i class="fa fa-angle-down text"></i> <i class="fa fa-angle-up text-active"></i>
-                    </span>
-                  <span>Sales Order </span> </a>
-                  <ul class="nav lt">
-
-              <li class="<?php if($page == 'approved'){echo  "active"; }?>">
-                <a href="<?=base_url()?>sales_order/approved"> <i class="fa fa-shopping-cart icon">
-                <b class="bg-<?=config_item('theme_color');?>"></b> </i>
-                <span>Approved Sales Order</span> </a> </li>
+           <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager'  ){ ?>
               <li class="<?php if($page == 'sales_order_report'){echo  "active"; }?>">
-                <a href="<?=base_url()?>sales_order/report"> <i class="fa fa-shopping-cart icon">
+                <a href="<?=base_url()?>sales_order_new/sales_order/report"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Sales Order Report</span> </a> </li>
-                  </ul>
                 </li>
            <?php } ?>
 
            <?php if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager'){ ?>
-                <li class="">
+                <li class="<?php if($page == "waiting_procurement" OR $page == "sent_procurement" OR $page == "approved_procurement" OR $page == "rejected_procurement"){echo  "active"; }?>">
                   <a href="#" >
                     <i class="fa fa-shopping-cart icon">
                     <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                     <span class="pull-right"> <i class="fa fa-angle-down text"></i> <i class="fa fa-angle-up text-active"></i>
                     </span>
-                  <span>Order </span> </a>
+                  <span>Supplier Order </span> </a>
                   <ul class="nav lt">
 
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'waiting_procurement'){echo  "active"; }?>">
                 <a href="<?=base_url()?>procurement"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Waiting for Approve Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'approved_procurement'){echo  "active"; }?>">
                 <a href="<?=base_url()?>procurement/approved"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Approved  Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'rejected_procurement'){echo  "active"; }?>">
                 <a href="<?=base_url()?>procurement/rejected"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Rejected Order</span> </a> </li>
-              <li class="<?php if($page == 'sales_order'){echo  "active"; }?>">
+              <li class="<?php if($page == 'sent_procurement'){echo  "active"; }?>">
                 <a href="<?=base_url()?>procurement/sent"> <i class="fa fa-shopping-cart icon">
                 <b class="bg-<?=config_item('theme_color');?>"></b> </i>
                 <span>Sent Order</span> </a> </li>

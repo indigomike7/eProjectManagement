@@ -14,7 +14,7 @@ class Procurement extends MX_Controller {
 		$this->load->library(array('tank_auth','form_validation'));
 		$this -> form_validation -> set_error_delimiters('<span style="color:red">', '</span><br>');
 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'finance' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales')
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'finance' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'salesmanager')
                 {
                     $this->session->set_flashdata('message', lang('access_denied'));
                     redirect('');
@@ -27,7 +27,7 @@ class Procurement extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "waiting_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		//$data['datepicker'] = TRUE;
@@ -37,6 +37,12 @@ class Procurement extends MX_Controller {
                 $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
                             $array = array(
                                     'status =' => '0'),$join_table = '',$join_criteria = '','procurement_id');
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                {
+                $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
+                            $array = array(
+                                    'status =' => '0', 'created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','procurement_id');
+                }   
                     
 /*                }*/
                     
@@ -49,7 +55,7 @@ class Procurement extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "approved_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		//$data['datepicker'] = TRUE;
@@ -59,6 +65,12 @@ class Procurement extends MX_Controller {
                 $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
                             $array = array(
                                     'status =' => '1'),$join_table = '',$join_criteria = '','procurement_id');
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                {
+                $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
+                            $array = array(
+                                    'status =' => '1', 'created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','procurement_id');
+                }   
                     
 /*                }*/
                     
@@ -71,7 +83,7 @@ class Procurement extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "rejected_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		//$data['datepicker'] = TRUE;
@@ -81,6 +93,12 @@ class Procurement extends MX_Controller {
                 $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
                             $array = array(
                                     'status =' => '2'),$join_table = '',$join_criteria = '','procurement_id');
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                {
+                $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
+                            $array = array(
+                                    'status =' => '2', 'created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','procurement_id');
+                }   
                     
 /*                }*/
                     
@@ -93,17 +111,21 @@ class Procurement extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "sent_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		//$data['datepicker'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
 		$data['languages'] = $this -> applib -> languages();
-
                 $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
                             $array = array(
                                     'status =' => '3'),$join_table = '',$join_criteria = '','procurement_id');
-                    
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                {
+                $data['procurement'] = $this->AppModel->get_all_records($table = 'fx_procurement',
+                            $array = array(
+                                    'status =' => '3', 'created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','procurement_id');
+                }   
 /*                }*/
                     
 				$this->template

@@ -12,7 +12,7 @@ class View extends MX_Controller {
 	{
 		parent::__construct();
 		$this->load->library(array('tank_auth','form_validation'));
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'finance' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales' )
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'admin'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'finance' && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'salesmanager' )
                 {
 			$this->session->set_flashdata('message', lang('access_denied'));
 			redirect('');
@@ -26,7 +26,7 @@ class View extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Edit Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "waiting_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['datepicker'] = TRUE;
@@ -74,7 +74,7 @@ class View extends MX_Controller {
             $this->load->module('layouts');
             $this->load->library('template');
             $this->template->title('Order Items');
-            $data['page'] = "view_item.php";
+            $data['page'] = "waiting_procurement";
             $data['datatables'] = TRUE;
             $data['form'] = TRUE;
             $data['datepicker'] = TRUE;
@@ -275,9 +275,10 @@ class View extends MX_Controller {
                 }
                     }
             }
-                $data["procurement"]=$this->AppModel->get_all_records($table = 'fx_procurement',
+/*                $data["procurement"]=$this->AppModel->get_all_records($table = 'fx_procurement',
                     $array = array(
-                            'procurement_id =' => $procurement_id),$join_table = 'fx_suppliers',$join_criteria = 'fx_suppliers.supplier_id=fx_procurement.supplier_id','procurement_id');
+                            'procurement_id =' => $procurement_id),$join_table = 'fx_suppliers',$join_criteria = 'fx_suppliers.supplier_id=fx_procurement.supplier_id','procurement_id');*/
+                            $data['procurement']=$this->db->query("select * from fx_procurement left join fx_suppliers on fx_suppliers.supplier_id = fx_procurement.supplier_id where procurement_id='".$procurement_id."'")->result();
                 $data["procurement_items"]=$this->AppModel->get_all_records($table = 'fx_procurement_items',
                     $array = array(
                             'procurement_id =' => $procurement_id),$join_table = '',$join_criteria = '','procurement_id');
@@ -526,7 +527,7 @@ class View extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title('Create Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "waiting_procurement";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['datepicker'] = TRUE;

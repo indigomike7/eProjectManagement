@@ -20,14 +20,15 @@
                       <tr>
                         
                         <th>Sales Order No </th>
-<!--                        <th>Total Cost</th>-->
+                        <th>Created By</th>
+                        <th>Status</th>
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                         <th>Sales Leader Name</th>
                         <th>Sales Leader ID</th>
                         <th>Status</th>
 <?php } ?>
                         <th>Sales Order date</th>
-    <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
+    <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement') { ?> 
                         <th class="col-options no-sort"></th>
 <?php } ?>
                       </tr> </thead> <tbody>
@@ -40,52 +41,33 @@
                         <td>
                         <i class="fa fa-circle-o "></i>
 
-                        <!--<a href="<?=base_url()?>sales_order_new/view/item_details/<?=$each->so_id?>" class="text-info">-->
-                        <?=$each->so_number?></td>
-<!--                      <td>
-                          <?php
-                              $total=0;
-                                              $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
-                            $array = array(
-                                    'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
-                    
-
-                          if(!empty($sales_order_item))
-                          {
-                              foreach($sales_order_item as $each2)
-                              {
-                                  if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
-                                        $total=$total+$each2->total_cost;
-                                  else
-                                        $total=$total+$each2->total_cost_2;
-                                      
-                              }
-                              
-                          }
-                          echo $total;
-                      ?>
-                      </td>-->
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/item_details/<?=$each->so_id?>" class="text-info">
+                        <?=$each->so_number?></a></td>
                         <td><?=$each->so_created_by?></td>
-                        <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
-//                echo print_r($users);
-                $staff_id=$users[0]->staff_id; echo $staff_id;
-?></td>
 <td>
-                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : "")  ?></a></td>
-<?php } ?>
+                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : ($each->status=="3" ? '<span style="background:blue;"><font color="white">sent</font></span>' : ($each->status=="4" ? '<span style="background:yellow;"><font color="black">Pending PO</font></span>' : ($each->status=="5" ? '<span style="background:grey;"><font color="black">PO Received</font></span>' : '<span style="background:pink;"><font color="black">Waiting for approval</font></span>'))))  ?></a></td>
                         <td>
 
 
                         <?=$each->so_date?></td>
 
                         
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
 
                         <td>
+
                         <a href="<?=base_url()?>sales_order_new/view/details/<?=$each->so_id?>" class="btn btn-default btn-xs" title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
                         <a href="<?=base_url()?>sales_order_new/view/delete/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('delete')?>"><i class="fa fa-trash-o"></i></a>
-                        
+<?php if ( $each->status=="3") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/pending_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Pending PO')?>">Pending PO</a>
+                        <a href="<?=base_url()?>sales_order_new/view/received_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Received PO')?>">PO Received</a>
+<?php } ?>                        
+<?php if ( $each->status=="4") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/received_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Received PO')?>">PO Received</a>
+<?php } ?>                        
+<?php if ( $each->status=="5") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/pending_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Pending PO')?>">Pending PO</a>
+<?php } ?>                        
                       </td>
 <?php } ?>
                     </tr>

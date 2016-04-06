@@ -135,7 +135,7 @@
 								<thead>
 									<tr>
                         <th>Sales Order No </th>
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'sales_manager' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
                         <th>Created By</th>
                         <th>Status</th>
 <?php } ?>
@@ -148,14 +148,10 @@
 										foreach ($sales_order as $key => $each) { if($i<11){?>
 										<tr>
                                                                                     <td><?php echo '<a href="'.  base_url().'sales_order/view/item_details/'.$each->so_id.'">'.$each->so_number.'</a>';?></td>
-                                          <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                                          <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'salesmanager') { ?> 
                                                                   <td><?=$each->so_created_by?></td>
-                                                                  <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
-                                          //                echo print_r($users);
-                                                          $staff_id=$users[0]->staff_id; echo $staff_id;
-                                          ?></td>
-                                          <td>
-                                                                  <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : "")  ?></a></td>
+<td>
+                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : ($each->status=="3" ? '<span style="background:blue;"><font color="white">sent</font></span>' : ($each->status=="4" ? '<span style="background:yellow;"><font color="black">Pending PO</font></span>' : ($each->status=="5" ? '<span style="background:grey;"><font color="black">PO Received</font></span>' : '<span style="background:pink;"><font color="black">Waiting for approval</font></span>'))))  ?></a></td>
                                           <?php } ?>
                                                                   <td>
 

@@ -21,7 +21,7 @@
                                     </select>
 			        <a href="<?=base_url()?>companies/view/create" class="btn btn-<?=config_item('theme_color');?> btn-sm" data-toggle="ajaxModal" title="<?=lang('new_company')?>" data-placement="bottom"><i class="fa fa-plus"></i> <?=lang('new_client')?></a>
                             </div>
-                            <div class="col-sm-4">
+<!--                            <div class="col-sm-4">
                                 <label>Address</label><br/>
                                 <span id="address"><?=((count($clients2)>0) ? $clients2[0]->company_address : "")?></span><br/>
                                 <label>States</label><br/>
@@ -40,11 +40,11 @@
                                 <span id="office_no"><?=((count($clients2)>0) ? $clients2[0]->company_phone : "")?></span><br/>
                                 <label>Url</label><br/>
                                 <span id="url"><?=((count($clients2)>0) ? $clients2[0]->company_website : "")?></span><br/>
-                            </div>
-                            <div class="col-sm-4">
+                            </div>-->
+                            <div class="col-sm-12">
                             <div class="form-group">
                                     <label>Sales Order Number <span class="text-danger">*</span></label>
-                                    <input type="so_number" name="so_number" value="" class="input-sm form-control" required>
+                                    <input type="so_number" name="so_number" value="" class="input-sm input-s form-control" required>
                             </div>
                             <div class="form-group">
                                     <label>Sales Order Date  <span class="text-danger">*</span></label>
@@ -64,7 +64,7 @@
                             <div style="clear:left;"></div>
                             <div class="form-group">
                                     <label>Upload Client Quotation <span class="text-danger">*</span></label>
-                                    <input type="file" name="client_quotation_file[]" value="" class="input-sm form-control" multiple>
+                                    <input type="file" name="client_quotation_file[]" value="" class="" multiple>
                                     <input type="checkbox" name="bypass" value="yes">Bypass Sales Manager Approve and direct sent to client
                             </div>
                         </div>

@@ -27,7 +27,7 @@ class Sales_order extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title(' Sales Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "waiting_sales_order";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
@@ -47,15 +47,15 @@ class Sales_order extends MX_Controller {
                             $array = array(
                                     'status = ' => '0'),$join_table = '',$join_criteria = '','so_id');
                     
-                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_procurement' )
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
                 $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
-                                    'status = ' => '1', 'procurement = ' => $this->tank_auth->get_user_id()),$join_table = '',$join_criteria = '','so_id');
+                                    'status = ' => '0', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
 
                 if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_finance' )
                 $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
-                                    'status = ' => '1'),$join_table = '',$join_criteria = '','so_id');
+                                    'status = ' => '0'),$join_table = '',$join_criteria = '','so_id');
                 /*                }*/
                     
 				$this->template
@@ -67,7 +67,7 @@ class Sales_order extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title(' Sales Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "approved_sales_order";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
@@ -87,6 +87,13 @@ class Sales_order extends MX_Controller {
                             $array = array(
                                     'status = ' => '1'),$join_table = '',$join_criteria = '','so_id');
                     
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '1', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
+
+
+                    
 /*                }*/
                     
 				$this->template
@@ -98,7 +105,7 @@ class Sales_order extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title(' Sales Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "sent_sales_order";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
@@ -117,6 +124,12 @@ class Sales_order extends MX_Controller {
                             $array = array(
                                     'status = ' => '3'),$join_table = '',$join_criteria = '','so_id');
                     
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '3', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
+
+                    
 /*                }*/
                     
 				$this->template
@@ -128,7 +141,7 @@ class Sales_order extends MX_Controller {
 		$this->load->module('layouts');
 		$this->load->library('template');
 		$this->template->title(' Sales Order ');
-		$data['page'] = lang('clients');
+		$data['page'] = "rejected_sales_order";
 		$data['datatables'] = TRUE;
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
@@ -147,18 +160,93 @@ class Sales_order extends MX_Controller {
                             $array = array(
                                     'status = ' => '2'),$join_table = '',$join_criteria = '','so_id');
                     
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '2', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
+
 /*                }*/
                     
 				$this->template
 				->set_layout('users')
 				->build('rejected',isset($data) ? $data : NULL);
 	}
+	function pending_po()
+	{
+		$this->load->module('layouts');
+		$this->load->library('template');
+		$this->template->title(' Sales Order ');
+		$data['page'] = "pending_sales_order";
+		$data['datatables'] = TRUE;
+		$data['form'] = TRUE;
+		$data['currencies'] = $this -> applib -> currencies();
+		$data['languages'] = $this -> applib -> languages();
+
+/*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
+                {
+                    $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'so_admin =' => $this->tank_auth->get_user_id()),$join_table = '',$join_criteria = '','so_id');
+                }
+                else
+                {
+*/
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '4'),$join_table = '',$join_criteria = '','so_id');
+                    
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '4', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
+
+/*                }*/
+                    
+				$this->template
+				->set_layout('users')
+				->build('pending_po',isset($data) ? $data : NULL);
+	}
+	function received_po()
+	{
+		$this->load->module('layouts');
+		$this->load->library('template');
+		$this->template->title(' Sales Order ');
+		$data['page'] = "received_sales_order";
+		$data['datatables'] = TRUE;
+		$data['form'] = TRUE;
+		$data['currencies'] = $this -> applib -> currencies();
+		$data['languages'] = $this -> applib -> languages();
+
+/*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
+                {
+                    $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'so_admin =' => $this->tank_auth->get_user_id()),$join_table = '',$join_criteria = '','so_id');
+                }
+                else
+                {
+*/
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '5'),$join_table = '',$join_criteria = '','so_id');
+                    
+                if($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales' )
+                $data['sales_order'] = $this->AppModel->get_all_records($table = 'fx_sales_order',
+                            $array = array(
+                                    'status = ' => '5', 'so_created_by = ' => $this->tank_auth->get_username()),$join_table = '',$join_criteria = '','so_id');
+
+/*                }*/
+                    
+				$this->template
+				->set_layout('users')
+				->build('received_po',isset($data) ? $data : NULL);
+	}
 	function report()
 	{
             $this->load->module('layouts');
             $this->load->library('template');
             $this->template->title('Sales Order Report');
-            $data['page'] = "view_item_sales_order.php";
+            $data['page'] = "report_sales_order";
             $data['datatables'] = TRUE;
             $data['form'] = TRUE;
             $data['datepicker'] = TRUE;
@@ -169,31 +257,22 @@ class Sales_order extends MX_Controller {
                 
 		if($this->input->post())
                 {
-                    if($this->input->post("so_created_by")== "" && $this->input->post("status")=="")
+//                    die($this->input->post("status"));
+                $date = date_format(date_create_from_format(config_item('date_php_format'), $this->input->post('date_start')), 'Y-m-d');
+                $date2 = date_format(date_create_from_format(config_item('date_php_format'), $this->input->post('date_end')), 'Y-m-d');
+                    if($this->input->post("status")!="99")
                     {
                         $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
-                                    'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
-                    }
-                    elseif($this->input->post("so_created_by")!= "" && $this->input->post("status")=="")
-                    {
-                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
-                            $array = array(
-                                    'so_created_by = ' => $this->input->post("so_created_by"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
-                    }
-                    elseif($this->input->post("so_created_by")== "" && $this->input->post("status")!="")
-                    {
-                        $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
-                            $array = array(
-                                    'status = ' => $this->input->post("status"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                                    'status = ' => $this->input->post("status"),'so_date >= ' => $date ,'so_date <= ' => $date2) ,$join_table = '',$join_criteria = '','so_id');
                     }
                     else
                     {
                         $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
-                                    'status = ' => $this->input->post("status"),'so_created_by = ' => $this->input->post("so_created_by"),'so_date >= ' => $this->input->post("date_start"),'so_date <= ' => $this->input->post("date_end")),$join_table = '',$join_criteria = '','so_id');
+                                    'so_date >= ' => $date,'so_date <= ' => $date2),$join_table = '',$join_criteria = '','so_id');
                     }
-                    
+                    //die(print_r($sales_order));
                     $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
                     $content="";
                     $obj_pdf->SetCreator(PDF_CREATOR);
@@ -213,33 +292,20 @@ class Sales_order extends MX_Controller {
                     ob_start();
                         // we can have any view part here like HTML, PHP etc
                         $content = "<html><body>";
-                        $content.="<table width=\"100%\" border=\"1\"><thead><tr><th width=\"25%\">SO Number</th><th width=\"25%\">So Date</th><th width=\"25%\">Sales Leader</th><th width=\"25%\">TOTAL (RM)</th></tr></thead>";
+                        $content.="<table width=\"100%\" border=\"1\"><thead><tr><th width=\"25%\">SO Number</th><th width=\"25%\">So Date</th></tr></thead>";
                         /*START TBODY*/
                         $content.="<tbody>";
                         $i=1;
                         $total=0;
-                        foreach($sales_order as $each)
+                        if(count($sales_order)>0)
                         {
-                              $total=0;
-                                              $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
-                            $array = array(
-                                    'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
-                    
-
-                          if(!empty($sales_order_item))
-                          {
-                              foreach($sales_order_item as $each2)
-                              {
-                                  if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
-                                        $total=$total+$each2->total_cost;
-                                  else
-                                        $total=$total+$each2->total_cost_2;
-                                      
-                              }
-                              
-                          }
-                            /*LOOP*/
-                            $content.="<tr><td width=\"25%\">".$each->so_number."</td><td width=\"25%\">".$each->so_date."</td><td width=\"25%\">".$each->so_created_by."</td><td width=\"25%\">".$total."</td></tr>";
+                      //      die(count($sales_order));
+                            foreach($sales_order as $each)
+                            {
+                                  $total=0;
+                                /*LOOP*/
+                                $content.="<tr><td width=\"25%\">".$each->so_number."</td><td width=\"25%\">".$each->so_date."</td></tr>";
+                            }
                         }
                         
                         $content.="</table>";

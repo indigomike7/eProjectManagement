@@ -30,7 +30,7 @@
                                     </select>
 			        <a href="<?=base_url()?>companies/view/create" class="btn btn-<?=config_item('theme_color');?> btn-sm" data-toggle="ajaxModal" title="<?=lang('new_company')?>" data-placement="bottom"><i class="fa fa-plus"></i> <?=lang('new_client')?></a>
                             </div>
-                            <div class="col-sm-4">
+<!--                            <div class="col-sm-4">
                                 <label>Address</label><br/>
                                 <span id="address"><?=$clients2[0]->company_address?></span><br/>
                                 <label>States</label><br/>
@@ -49,11 +49,11 @@
                                 <span id="office_no"><?=$clients2[0]->company_phone?></span><br/>
                                 <label>Url</label><br/>
                                 <span id="url"><?=$clients2[0]->company_website?></span><br/>
-                            </div>
+                            </div>-->
                             <div class="col-sm-4">
-                            <div class="form-group">
+                            <div class="form-group ">
                                     <label>Sales Order Number <span class="text-danger">*</span></label>
-                                    <input type="so_number" name="so_number" value="<?=$sales_order[0]->so_number?>" class="input-sm form-control" required>
+                                    <input type="so_number" name="so_number" value="<?=$sales_order[0]->so_number?>" class="input-sm  input-s form-control" required>
                             </div>
                             <div class="form-group">
                                     <label>Sales Order Date </label>
@@ -86,7 +86,7 @@
                             <div style="clear:left;"></div>
                             <div class="form-group">
                                     <label>Upload Client Quotation <span class="text-danger">*</span></label>
-                                    <input type="file" name="client_quotation_file[]" value="" class="input-sm form-control" multiple>
+                                    <input type="file" name="client_quotation_file[]" value="" class="" multiple>
                                     <?php
                                     $data=$this->db->query("select * from fx_sales_order_files where so_id='".$sales_order[0]->so_id."' and type='client_quotation_file'")->result();
                                     if(count($data)>0)

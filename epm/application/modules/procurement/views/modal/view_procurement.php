@@ -7,7 +7,7 @@
 		<section class="scrollable padder">
 <?php
             echo form_open(base_url().'procurement/view/details/'.$procurement_id); ?>
-	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Edit Order</header>
+	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Edit Supplier Order</header>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab-client-general">
                             <input type="hidden" name="procurement_id" value="<?=$procurement_id?>"/>

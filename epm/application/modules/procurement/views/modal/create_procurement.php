@@ -3,7 +3,7 @@
 		<section class="scrollable padder">
 <?php
             echo form_open(base_url().'procurement/view/create'); ?>
-	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Create Price</header>
+	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Create Supplier Order</header>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab-client-general">
                             <div class="form-group">

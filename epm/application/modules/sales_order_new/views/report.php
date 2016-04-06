@@ -2,11 +2,11 @@
 	<section class="vbox">
 		<section class="scrollable padder">
 <?php
-            echo form_open(base_url().'sales_order/report'); ?>
+            echo form_open(base_url().'sales_order_new/sales_order/report'); ?>
 	<header class="panel-heading font-bold"><i class="fa fa-info-circle"></i> Sales Order Report</header>
                     <div class="tab-content">
                         <div class="tab-pane fade in active" id="tab-client-general">
-                            <div class="form-group">
+<!--                            <div class="form-group">
                                     <label>Sales Leader <span class="text-danger">*</span></label>
                                     <select name="so_created_by">
                                         <option value=""></option>
@@ -21,10 +21,11 @@
                                         ?>
                                     </select>
                             </div>
+-->
                             <div class="form-group">
-                                    <label>Sales Leader <span class="text-danger">*</span></label>
+                                    <label>Status <span class="text-danger">*</span></label>
                                     <select name="status">
-                                        <option value="">All</option>
+                                        <option value="99">All</option>
                                         <option value="1">Approved</option>
                                         <option value="2">Rejected</option>
                                     </select>
@@ -38,7 +39,7 @@
                                     <input class="input-sm input-s datepicker-input form-control" size="16" type="text" value="" name="date_end" data-date-format="<?=config_item('date_picker_format');?>" required>
                             </div>
                         </div>
-                        <a href="<?php echo base_url();?>sales_order" class="btn btn-default" >Cancel</a>
+                        <a href="<?php echo base_url();?>sales_order_new/sales_order" class="btn btn-default" >Cancel</a>
 			<button type="submit" class="btn btn-<?=config_item('theme_color');?>">Submit</button>
                         <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen" data-target="#nav"></a>
                     </form>

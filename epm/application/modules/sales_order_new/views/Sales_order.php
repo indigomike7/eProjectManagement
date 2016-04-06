@@ -8,7 +8,7 @@
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement') { ?> 
           <a href="<?=base_url()?>sales_order_new/view/create" class="btn btn-<?=config_item('theme_color');?> btn-sm pull-right" title="New Sales Order" data-placement="bottom"><i class="fa fa-plus"></i> New Sales Order</a>
 <?php }?>
-          <p>Registered Sales Order</p>
+          <p>Waiting for Approved Sales Order</p>
         </header>
         <section class="scrollable wrapper">
           <div class="row">
@@ -20,8 +20,9 @@
                       <tr>
                         
                         <th>Sales Order No </th>
-<!--                        <th>Total Cost</th>-->
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
+                        <th>Created By</th>
+                        <th>Status</th>
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance' ) { ?> 
                         <th>Sales Leader Name</th>
                         <th>Sales Leader ID</th>
                         <th>Status</th>
@@ -42,45 +43,16 @@
 
                         <a href="<?=base_url()?>sales_order_new/view/item_details/<?=$each->so_id?>" class="text-info">
                         <?=$each->so_number?></a></td>
-<!--                      <td>
-                          <?php
-                              $total=0;
-                                              $sales_order_item = $this->AppModel->get_all_records($table = 'fx_sales_order_items',
-                            $array = array(
-                                    'soi_so_id =' => $each->so_id),$join_table = '',$join_criteria = '','soi_id');
-                    
-
-                          if(!empty($sales_order_item))
-                          {
-                              foreach($sales_order_item as $each2)
-                              {
-                                  if($each2->total_cost_2==null || $each2->total_cost_2=="0.00")
-                                        $total=$total+$each2->total_cost;
-                                  else
-                                        $total=$total+$each2->total_cost_2;
-                                      
-                              }
-                              
-                          }
-                          echo $total;
-                      ?>
-                      </td>-->
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_manager' ) { ?> 
                         <td><?=$each->so_created_by?></td>
-                        <td><?php 		$users = $this->db->where("username",$each->so_created_by)->get("fx_users")->result();
-//                echo print_r($users);
-                $staff_id=$users[0]->staff_id; echo $staff_id;
-?></td>
 <td>
-                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : "")  ?></a></td>
-<?php } ?>
+                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : ($each->status=="3" ? '<span style="background:blue;"><font color="white">sent</font></span>' : "waiting for approval"))  ?></a></td>
                         <td>
 
 
                         <?=$each->so_date?></td>
 
                         
-<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
+<?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'finance'  ) { ?> 
 
                         <td>
 
