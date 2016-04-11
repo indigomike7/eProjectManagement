@@ -45,7 +45,7 @@
 				</div> </section>
 				<div class="row
                                      <?php 
-		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'sales_manager'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement' )
+		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'internalsales'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'salesmanager'  && $this->tank_auth->user_role($this->tank_auth->get_role_id()) != 'procurement' )
                 {
                                          ?>
 					<div class="col-md-8">

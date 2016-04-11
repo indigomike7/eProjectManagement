@@ -98,7 +98,8 @@
 	</script>
 	<script src="js/ie/excanvas.js" cache="false">
 	</script> <![endif]-->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+
 </head>
 <body>
 	<div class="vbox">

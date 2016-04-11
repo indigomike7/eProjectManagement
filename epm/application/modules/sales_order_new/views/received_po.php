@@ -8,7 +8,7 @@
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_leader' ) { ?> 
           <a href="<?=base_url()?>sales_order/view/create" class="btn btn-<?=config_item('theme_color');?> btn-sm pull-right" title="New Sales Order" data-placement="bottom"><i class="fa fa-plus"></i> New Sales Order</a>
 <?php }?>
-          <p>Approved Sales Order</p>
+          <p>Received PO Sales Order</p>
         </header>
         <section class="scrollable wrapper">
           <div class="row">
@@ -45,7 +45,7 @@
                         <?=$each->so_number?></a></td>
                         <td><?=$each->so_created_by?></td>
 <td>
-                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : ($each->status=="3" ? '<span style="background:blue;"><font color="white">sent</font></span>' : "waiting for approval"))  ?></a></td>
+                        <?=$each->status=="1" ? '<span style="background:green;"><font color="white">approved</font></span>' : ($each->status=="2" ? '<span style="background:red;"><font color="white">rejected</font></span>' : ($each->status=="3" ? '<span style="background:blue;"><font color="white">sent</font></span>' : ($each->status=="4" ? '<span style="background:yellow;"><font color="black">Pending PO</font></span>' : ($each->status=="5" ? '<span style="background:grey;"><font color="black">PO Received</font></span>' : '<span style="background:pink;"><font color="black">Waiting for approval</font></span>'))))  ?></a></td>
                         <td>
 
 
@@ -55,9 +55,19 @@
 <?php if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'admin' || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'internalsales'  || $this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'procurement' ) { ?> 
 
                         <td>
+
                         <a href="<?=base_url()?>sales_order_new/view/details/<?=$each->so_id?>" class="btn btn-default btn-xs" title="<?=lang('edit')?>"><i class="fa fa-edit"></i></a>
                         <a href="<?=base_url()?>sales_order_new/view/delete/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('delete')?>"><i class="fa fa-trash-o"></i></a>
-                        <a href="<?=base_url()?>sales_order_new/view/send/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="Send to Client">Send to client</a>
+<?php if ( $each->status=="3") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/pending_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Pending PO')?>">Pending PO</a>
+                        <a href="<?=base_url()?>sales_order_new/view/received_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Received PO')?>">PO Received</a>
+<?php } ?>                        
+<?php if ( $each->status=="4") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/received_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Received PO')?>">PO Received</a>
+<?php } ?>                        
+<?php if ( $each->status=="5") { ?> 
+                        <a href="<?=base_url()?>sales_order_new/view/pending_po/<?=$each->so_id?>" class="btn btn-default btn-xs" data-toggle="ajaxModal" title="<?=lang('Pending PO')?>">Pending PO</a>
+<?php } ?>                        
                         
                       </td>
 <?php } ?>

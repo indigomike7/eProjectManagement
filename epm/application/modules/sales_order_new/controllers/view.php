@@ -110,11 +110,16 @@ class View extends MX_Controller {
                         }
                     }
                     //echo $this->session->userdata('page_so');
-                            if($this->session->userdata('page_so')=="sales_order")
+/*                    switch($this->session->userdata('page_so'))
+                    {
+                        
+                        case "sales_order":
 				redirect(base_url()."sales_order_new/sales_order");
-                            else
-				redirect(base_url()."sales_order_new/sales_order/approved");
-                                
+                                break;
+                            default:
+				redirect(base_url()."sales_order_new/sales_order/".$this->session->userdata('page_so'));
+                                break;
+                    }        */
 			}
 		}
 		$this->template
@@ -722,6 +727,30 @@ class View extends MX_Controller {
             else
             {
                 $this->load->view('modal/pending_po',$data);
+            }
+	}
+	function send()
+	{
+            $data['so_id'] = $this->uri->segment(4);
+            if ($this->input->post()) 
+            {
+
+                $this->form_validation->set_rules('so_id','Sales Order ID','required');
+                if ($this->form_validation->run() == FALSE)
+                {
+                    $this->session->set_flashdata('response_status', 'error');
+                    $this->session->set_flashdata('message', lang('delete_failed'));
+                    $this->input->post('sales_order_item_id');
+                }else{
+                        $so_id=$this->input->post('so_id');
+                        $data=array("status"=>"3");
+                        $this->db->where(array("so_id"=>$so_id))->update("fx_sales_order",$data);
+                        redirect(base_url()."sales_order_new/sales_order");
+                }
+            }
+            else
+            {
+                $this->load->view('modal/send',$data);
             }
 	}
 	function received_po()

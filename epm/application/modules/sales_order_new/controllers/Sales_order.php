@@ -110,6 +110,7 @@ class Sales_order extends MX_Controller {
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
 		$data['languages'] = $this -> applib -> languages();
+                $this->session->set_userdata(array('page_so'=>'sent'));
 
 /*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
                 {
@@ -146,6 +147,7 @@ class Sales_order extends MX_Controller {
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
 		$data['languages'] = $this -> applib -> languages();
+                $this->session->set_userdata(array('page_so'=>'rejected'));
 
 /*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
                 {
@@ -181,6 +183,7 @@ class Sales_order extends MX_Controller {
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
 		$data['languages'] = $this -> applib -> languages();
+                $this->session->set_userdata(array('page_so'=>'pending_po'));
 
 /*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
                 {
@@ -216,6 +219,7 @@ class Sales_order extends MX_Controller {
 		$data['form'] = TRUE;
 		$data['currencies'] = $this -> applib -> currencies();
 		$data['languages'] = $this -> applib -> languages();
+                $this->session->set_userdata(array('page_so'=>'received_po'));
 
 /*		if ($this->tank_auth->user_role($this->tank_auth->get_role_id()) == 'e_sales_admin' )
                 {
@@ -252,15 +256,18 @@ class Sales_order extends MX_Controller {
             $data['datepicker'] = TRUE;
             $data['currencies'] = $this -> applib -> currencies();
             $data['languages'] = $this -> applib -> languages();
-                    $this->load->helper("pdf_helper");
-                    tcpdf();
+            $this->load->helper("pdf_helper");
+            $date="";
+            $date2="";
+            $status="";
+            tcpdf();
                 
 		if($this->input->post())
                 {
 //                    die($this->input->post("status"));
                 $date = date_format(date_create_from_format(config_item('date_php_format'), $this->input->post('date_start')), 'Y-m-d');
                 $date2 = date_format(date_create_from_format(config_item('date_php_format'), $this->input->post('date_end')), 'Y-m-d');
-                    if($this->input->post("status")!="99")
+/*                    if($this->input->post("status")!="99")
                     {
                         $sales_order = $this->AppModel->get_all_records($table = 'fx_sales_order',
                             $array = array(
@@ -293,7 +300,7 @@ class Sales_order extends MX_Controller {
                         // we can have any view part here like HTML, PHP etc
                         $content = "<html><body>";
                         $content.="<table width=\"100%\" border=\"1\"><thead><tr><th width=\"25%\">SO Number</th><th width=\"25%\">So Date</th></tr></thead>";
-                        /*START TBODY*/
+                        /*START TBODY
                         $content.="<tbody>";
                         $i=1;
                         $total=0;
@@ -303,7 +310,7 @@ class Sales_order extends MX_Controller {
                             foreach($sales_order as $each)
                             {
                                   $total=0;
-                                /*LOOP*/
+                                /*LOOP
                                 $content.="<tr><td width=\"25%\">".$each->so_number."</td><td width=\"25%\">".$each->so_date."</td></tr>";
                             }
                         }
@@ -313,18 +320,63 @@ class Sales_order extends MX_Controller {
 //                    ob_end_clean();
                     $obj_pdf->writeHTML($content, true, false, true, false, '');
                     $obj_pdf->Output('output.pdf', 'I');
-
+*/
+                    switch($this->input->post("status"))
+                    {
+                          case "99":
+                            $query="select * from fx_sales_order  left join fx_companies on fx_companies.co_id = fx_sales_order.so_client_id where so_date >= '".$date."' and so_date<='".$date2."'";
+                            $query2="SELECT MONTHNAME(so_date) as month_year ,  YEAR(so_date) AS year_year, count(so_number) as quantities 
+                                FROM fx_sales_order  left join fx_companies on fx_companies.co_id = fx_sales_order.so_client_id 
+                                WHERE  so_date >= '".$date."' and so_date<='".$date2."'  
+                                    GROUP BY YEAR(so_date), month(so_date)";
+                            break;
+                        default:
+                            $query="select * from fx_sales_order  left join fx_companies on fx_companies.co_id = fx_sales_order.so_client_id where so_date >= '".$date."' and so_date<='".$date2."' and status = '".$this->input->post("status")."'";
+                            $query2="SELECT MONTHNAME(so_date) as month_year ,  YEAR(so_date) AS year_year, count(so_number) as quantities 
+                                FROM fx_sales_order  left join fx_companies on fx_companies.co_id = fx_sales_order.so_client_id 
+                                WHERE  so_date >= '".$date."' and so_date<='".$date2."' and status='".$this->input->post("status")."'
+                                    GROUP BY YEAR(so_date), month(so_date)";
+                            break;
+                    }
+                    $data['report']=$this->db->query($query)->result();
+                    $data['chart']=$this->db->query($query2)->result();
+                            switch($this->input->post("status"))
+                            {
+                                case "0":
+                                    $data['status']="Waiting for Approval";
+                                    break;
+                                case "1":
+                                    $data['status']="Approved";
+                                    break;
+                                case "2":
+                                    $data['status']="Rejected";
+                                    break;
+                                case "3":
+                                    $data['status']="Sent";
+                                    break;
+                                case "4":
+                                    $data['status']="PO Pending";
+                                    break;
+                                case "5":
+                                    $data['status']="PO Received";
+                                    break;
+                                default:
+                                    $data['status']="All";
+                                    break;
+                            }
                 }
                 else
                 {
-                        $data['so_created_by'] = $this->AppModel->get_all_records($table = 'fx_users',
-                            $array = array(
-                                    'role_id = ' => '12'),$join_table = '',$join_criteria = '','fx_users.id');
-                    
-                                $this->template
-				->set_layout('users')
-				->build('report',isset($data) ? $data : NULL);
+                        $data['report']=null;
+                        $data['chart']=null;
                 }
+                $data['so_created_by'] = $this->AppModel->get_all_records($table = 'fx_users',
+                    $array = array(
+                            'role_id = ' => '12'),$join_table = '',$join_criteria = '','fx_users.id');
+
+                        $this->template
+                        ->set_layout('users')
+                        ->build('report',isset($data) ? $data : NULL); 
 	}
         function get_client_contact()
         {
